@@ -1,15 +1,12 @@
-var game = new Game('container', 300, 300);
+//var game = new Game('container', 300, 300);
 
 
-game.render();
+//game.render();
 
+var matrix = [];
 
 function getRandomInt(min, max) {
     return Math.floor(Math.random() * (max - min + 1)) + min;
-}
-
-function getMatrixCellId(width, height) {
-    return
 }
 
 function buildCell(x, y) {
@@ -74,6 +71,23 @@ function cellHasMine(x, y, width, height) {
     }
 }
 
+function neighbourMinesCountIncreaseForAllNeighbours(cellMatrix, x, y, width, height) {
+    for (var neighbourX = x - 1; neighbourX <= x + 1; neighbourX++) {
+
+        for (var neighbourY = y - 1; neighbourY <= y + 1; neighbourY++) {
+
+            if (isValidCell(neighbourX, neighbourY, width, height)) {
+
+                if (x!=neighbourX || y!=neighbourY) {
+                    cellMatrix[neighbourX][neighbourY].neighbourMinesCount++;
+                }
+            }
+
+        }
+
+    }
+}
+
 function generateMineMatrix(width, height, numberOfMines, selectedX, selectedY) {
     var cellMatrix = generateCellMatrix(width, height);
     var possibleMinesCordinatesMatrix = generatePossibleMinesMatrix(width, height, selectedX, selectedY);
@@ -85,15 +99,31 @@ function generateMineMatrix(width, height, numberOfMines, selectedX, selectedY) 
 
         cellMatrix[currentMineX][currentMineY].hasMine = true;
 
+        neighbourMinesCountIncreaseForAllNeighbours(cellMatrix, currentMineX, currentMineY, width, height);
+
         possibleMinesCordinatesMatrix.splice(mineIndex, 1);
     }
-
 
     return cellMatrix;
 }
 
 var matrix = generateCellMatrix(3, 4);
 var matrix2 = generatePossibleMinesMatrix(3, 4, 2, 2);
-var matrix3 = generateMineMatrix(3, 4, 6, 2, 2);
-matrix3[1][1].hasMine = true;
-console.log(matrix3);
+var matrix3 = generateMineMatrix(10, 10, 15, 2, 2);
+
+for (var i = 0; i < 10; i++) {
+
+    var line = '';
+    for (var j = 0; j < 10; j++) {
+        if (matrix3[i][j].hasMine) {
+            line += 'X';
+        }
+        else {
+            line += matrix3[i][j].neighbourMinesCount;
+        }
+        line += ' ';
+    }
+
+    console.log(line);
+}
+//console.log(matrix3);
