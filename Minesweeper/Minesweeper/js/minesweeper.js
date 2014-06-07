@@ -4,9 +4,17 @@
 //game.render();
 
 var matrix = [];
+var width;
+var height;
+var gameState = '';
+
 
 function getRandomInt(min, max) {
     return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+
+function gameOver() {
+    //some more code
 }
 
 function buildCell(x, y) {
@@ -78,13 +86,43 @@ function neighbourMinesCountIncreaseForAllNeighbours(cellMatrix, x, y, width, he
 
             if (isValidCell(neighbourX, neighbourY, width, height)) {
 
-                if (x!=neighbourX || y!=neighbourY) {
+                if (x != neighbourX || y != neighbourY) {
                     cellMatrix[neighbourX][neighbourY].neighbourMinesCount++;
                 }
             }
 
         }
 
+    }
+}
+
+function clickCell(cellMatrix, x, y) {
+
+    if (!isValidCell(x, y, width, height)) {
+        return;
+    }
+
+    if (cellMatrix[x][y].isRevealed) {
+        return;
+    }
+
+    cellMatrix[x][y].isRevealed = true;
+
+    if (cellMatrix[x][y].hasMine) {
+        gameOver();
+        return;
+    }
+    if (cellMatrix[x][y].neighbourMinesCount == 0) {
+
+        for (var neighbourX = x - 1; neighbourX <= x + 1; neighbourX++) {
+
+            for (var neighbourY = y - 1; neighbourY <= y + 1; neighbourY++) {
+
+                if (x != neighbourX || y != neighbourY) {
+                    clickCell(cellMatrix, neighbourX, neighbourY);
+                }
+            }
+        }
     }
 }
 
@@ -111,19 +149,29 @@ var matrix = generateCellMatrix(3, 4);
 var matrix2 = generatePossibleMinesMatrix(3, 4, 2, 2);
 var matrix3 = generateMineMatrix(10, 10, 15, 2, 2);
 
-for (var i = 0; i < 10; i++) {
+function consolePrintMatrix(matrix, width, height) {
 
-    var line = '';
-    for (var j = 0; j < 10; j++) {
-        if (matrix3[i][j].hasMine) {
-            line += 'X';
+    for (var i = 0; i < width; i++) {
+        var line = '';
+        for (var j = 0; j < height; j++) {
+            if (matrix[i][j].hasMine) {
+                line += 'X';
+            }
+            else {
+                line += matrix[i][j].neighbourMinesCount;
+            }
+
+            if (matrix[i][j].isRevealed) {
+                line += 'r';
+            }
+            else {
+                line += '?';
+            }
+            line += ' ';
         }
-        else {
-            line += matrix3[i][j].neighbourMinesCount;
-        }
-        line += ' ';
+
+        console.log(line);
     }
-
-    console.log(line);
 }
-//console.log(matrix3);
+
+consolePrintMatrix(matrix3, 10, 10);
