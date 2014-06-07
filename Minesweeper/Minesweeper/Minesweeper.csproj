@@ -60,9 +60,9 @@
     <Content Include="css\style.css" />
     <Content Include="index.html" />
     <Content Include="js\engine.js" />
-    <Content Include="js\lib\jquery-2.1.1.min.js" />
-    <Content Include="js\lib\kinetic-v5.1.0.min.js" />
-    <Content Include="js\lib\raphael-min.js" />
+    <Content Include="js\lib\jquery.js" />
+    <Content Include="js\lib\kinetic.js" />
+    <Content Include="js\lib\raphael.js" />
     <Content Include="js\minesweeper.js" />
     <Content Include="Web.config" />
   </ItemGroup>
