@@ -1,7 +1,15 @@
-//var game = new Game('container', 300, 300);
+var sprites = {
+    mine: { sx: 0, sy: 0, w: 37, h: 42, frames: 1 }
+};
 
+var startGame = function () {
 
-//game.render();
+};
+
+window.addEventListener("load", function() {
+    Game.initialize("board", sprites, startGame);
+});
+
 
 var matrix = [];
 var width;

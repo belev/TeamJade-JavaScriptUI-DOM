@@ -1,9 +1,15 @@
 ﻿body {
+    text-align: center;
 }
 
-#container
-{
+
+#container {
+    margin: 50px;
+}
+
+#board {
     border:1px solid black;
-    width: 300px;
+    width: 800px;
+    height: 600px;
     margin: 0 auto;
 }

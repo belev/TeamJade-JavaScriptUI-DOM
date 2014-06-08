@@ -1,15 +1,27 @@
 ﻿<!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-    <title></title>
+    <title>Team Jade - MineSweeper</title>
+    <link rel="stylesheet" href="css/lib/bootstrap.min.css"/>
     <link rel="stylesheet" type="text/css" href="css/style.css" />
 </head>
 <body>
 
-    <div id="container"></div>
+    <h1>MineSweeper</h1>
+    <div id="container">
+        <div class="row">
+            <div class="col-sm-6">
+                <canvas id="board" width="500" height="500"></canvas>
+            </div>
+            <div id="menu" class="col-sm-6">
+
+            </div>
+        </div>
+    </div>
+
 
     <script src="js/lib/jquery.js"></script>
-    <script src="js/lib/kinetic.js"></script>
+    <script src="js/lib/bootstrap.min.js"></script>
     <script src="js/lib/raphael.js"></script>
     <script src="js/engine.js"></script>
     <script src="js/minesweeper.js"></script>
