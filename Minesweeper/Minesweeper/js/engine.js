@@ -23,14 +23,14 @@ var SpriteSheet = new function() {
         this.image.src = 'img/sprites.png';
     };
 
-    this.draw = function(ctx, sprite, x, y, frame) {
-        var s = this.map[sprite];
+    this.draw = function(ctx, spriteName, x, y, frame) {
+        var sprite = this.map[spriteName];
         if(!frame) frame = 0;
         ctx.drawImage(this.image,
-                        s.sx + frame * s.w,
-                        s.sy,
-                        s.w, s.h,
+                        sprite.sx + frame * sprite.w,
+                        sprite.sy,
+                        sprite.w, sprite.h,
                         Math.floor(x), Math.floor(y),
-                        s.w, s.h);
+                        sprite.w, sprite.h);
     };
 };
