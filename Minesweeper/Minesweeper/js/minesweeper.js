@@ -22,6 +22,8 @@
 
         playfield: [],
 
+        isGameOver: false,
+
         startGame: function () {
             ms.playfield = ms.generatePlayfield(ms.settings.rows, ms.settings.cols);
             ms.drawPlayfield();
@@ -30,6 +32,10 @@
 
         eventHandlerSetup: function() {
             Game.canvas.addEventListener("click", function (e) {
+                if (ms.isGameOver) {
+                    return;
+                }
+
                 e = e || window.event;
                 e.preventDefault();
 
@@ -48,7 +54,6 @@
                     rowPos = Math.floor(y / ms.sprites.cell.h);
 
                     if (!ms.playfield[rowPos][colPos].isFlagged && ms.playfield[colPos][rowPos].hasMine) {
-                        alert('you lose');
                         ms.gameover();
                     } else if (!ms.playfield[rowPos][colPos].isFlagged) {
                         ms.playfield[rowPos][colPos].isRevealed = true;
@@ -59,6 +64,10 @@
             });
 
             Game.canvas.addEventListener("contextmenu", function (e) {
+                if (ms.isGameOver) {
+                    return;
+                }
+
                 e = e || window.event;
                 e.preventDefault();
 
@@ -85,19 +94,57 @@
         },
 
         gameover: function () {
+            console.log('you lost');
 
+            ms.isGameOver = true;
+
+            var cX = 0,
+                cY = 0;
+
+            for (var i = 0; i < ms.settings.rows; i += 1) {
+                cX = 0;
+                for (var j = 0; j < ms.settings.cols; j += 1) {
+                    cX += ms.sprites.cell.w;
+                    ms.playfield[i][j].draw(Game.ctx);
+
+                    if (ms.playfield[i][j].hasMine) {
+                        ms.playfield[i][j].frame = 1;
+                        ms.playfield[i][j].draw(Game.ctx);
+
+                        SpriteSheet.draw(Game.ctx,
+                            'mine',
+                            ms.playfield[i][j].x,
+                            ms.playfield[i][j].y);
+                    } else {
+                        ms.playfield[i][j].draw(Game.ctx);
+                    }
+                }
+                cY += ms.sprites.cell.h;
+            }
         },
 
         generatePlayfield: function (rows, cols) {
             var cX = 0,
                 cY = 0,
+                currentCell,
                 board = [];
 
             for (var i = 0; i < rows; i += 1) {
                 cX = 0;
                 board[i] = [];
                 for (var j = 0; j < cols; j += 1) {
-                    board[i][j] = new Cell(cX, cY);
+
+                    currentCell = new Cell(cX, cY);
+
+                    if (i + j === 5) {
+                        currentCell.number = '1';
+                    }
+
+                    if (i + j === 10) {
+                        currentCell.hasMine = true;
+                    }
+
+                    board[i][j] = currentCell;
                     cX += ms.sprites.cell.w;
                 }
                 cY += ms.sprites.cell.h;
@@ -115,9 +162,18 @@
                 for (var j = 0; j < ms.settings.cols; j += 1) {
                     cX += ms.sprites.cell.w;
                     ms.playfield[i][j].draw(Game.ctx);
+
                     if (ms.playfield[i][j].isFlagged) {
                         SpriteSheet.draw(Game.ctx,
                                             'flag',
+                                            ms.playfield[i][j].x,
+                                            ms.playfield[i][j].y);
+                    }
+
+                    if (ms.playfield[i][j].isRevealed &&
+                            ms.playfield[i][j].number !== '0') {
+                        SpriteSheet.draw(Game.ctx,
+                                            ms.playfield[i][j].number,
                                             ms.playfield[i][j].x,
                                             ms.playfield[i][j].y);
                     }
@@ -132,7 +188,7 @@
     });
 
     var Cell = function(x, y) {
-        this.setup('cell', {x: x, y: y, hasMine: false, neighbourMinesCount: 0, isRevealed: false, isFlagged: false});
+        this.setup('cell', {x: x, y: y, hasMine: false, neighbourMinesCount: 0, isRevealed: false, isFlagged: false, number: '0'});
     };
 
     Cell.prototype = new Sprite();
