@@ -1,26 +1,112 @@
-var sprites = {
-    cell: { sx: 17, sy: 12, w: 20, h: 25, frames: 2 },
-    '1': { sx: 10, sy: 43, w: 20, h: 25, frames: 1 },
-    '2': { sx: 32, sy: 43, w: 20, h: 25, frames: 1 },
-    '3': { sx: 54, sy: 43, w: 20, h: 25, frames: 1 },
-    '4': { sx: 76, sy: 43, w: 20, h: 25, frames: 1 },
-    '5': { sx: 98, sy: 43, w: 20, h: 25, frames: 1 },
-    '6': { sx: 120, sy: 43, w: 20, h: 25, frames: 1 },
-    '7': { sx: 142, sy: 43, w: 20, h: 25, frames: 1 },
-    '8': { sx: 164, sy: 43, w: 20, h: 25, frames: 1 },
-    'flag': { sx: 12, sy: 70, w: 20, h: 25, frames: 2 },
-    'mine': { sx: 12, sy: 98, w: 22, h: 25, frames: 1 }
-};
+(function () {
+    var ms = {
 
-var startGame = function () {
-    SpriteSheet.draw(Game.ctx, 'cell', 0, 0, 1);
-    SpriteSheet.draw(Game.ctx, 'mine', 0, 0);
-};
+        settings: {
+            rows: 10,
+            cols: 10
+        },
 
-window.addEventListener("load", function() {
-    Game.initialize("board", sprites, startGame);
-});
+        sprites: {
+            '1': { sx: 0, sy: 0, w: 20, h: 20, frames: 1 },
+            '2': { sx: 20, sy: 0, w: 20, h: 20, frames: 1 },
+            '3': { sx: 40, sy: 0, w: 20, h: 20, frames: 1 },
+            '4': { sx: 60, sy: 0, w: 20, h: 20, frames: 1 },
+            '5': { sx: 80, sy: 0, w: 20, h: 20, frames: 1 },
+            '6': { sx: 100, sy: 0, w: 20, h: 20, frames: 1 },
+            '7': { sx: 120, sy: 0, w: 20, h: 20, frames: 1 },
+            '8': { sx: 140, sy: 0, w: 20, h: 20, frames: 1 },
+            mine: { sx: 160, sy: 0, w: 20, h: 20, frames: 1 },
+            cell: { sx: 180, sy: 0, w: 20, h: 20, frames: 2 },
+            flag: { sx: 220, sy: 0, w: 20, h: 20, frames: 1 }
+        },
 
+        playfield: [],
+
+        startGame: function () {
+            ms.playfield = ms.generatePlayfield(ms.settings.rows, ms.settings.cols);
+            ms.eventHandlerSetup();
+        },
+
+        eventHandlerSetup: function() {
+            Game.canvas.addEventListener("click", function (e) {
+                e.preventDefault();
+
+                var x = e.pageX,
+                    y = e.pageY,
+                    clickedX,
+                    clickedY;
+
+                x -= Game.canvas.offsetLeft;
+                y -= Game.canvas.offsetTop;
+
+                if (Math.floor(x / ms.sprites.cell.w) >= 0 && Math.floor(x / ms.sprites.cell.w) < 10 &&
+                    Math.floor(y / ms.sprites.cell.h) >= 0 && Math.floor(y / ms.sprites.cell.h) < 10) {
+
+                    clickedX = Math.floor(x / ms.sprites.cell.w);
+                    clickedY = Math.floor(y / ms.sprites.cell.h);
+
+                    if (ms.playfield[clickedX][clickedY].hasMine) {
+                        alert('you lose');
+                        ms.gameover();
+                    } else {
+                        ms.playfield[clickedY][clickedX].isRevealed = true;
+                        ms.playfield[clickedY][clickedX].frame = 1;
+                        ms.reDrawBoard();
+                    }
+                }
+            });
+        },
+
+        gameover: function () {
+
+        },
+
+        generatePlayfield: function (rows, cols) {
+            var cX = 0,
+                cY = 0,
+                board = [];
+
+            for (var i = 0; i < rows; i += 1) {
+                cX = 0;
+                board[i] = [];
+                for (var j = 0; j < cols; j += 1) {
+                    board[i][j] = new Cell(cX, cY);
+                    cX += ms.sprites.cell.w;
+                    board[i][j].draw(Game.ctx);
+                }
+                cY += ms.sprites.cell.h;
+            }
+
+            return board;
+        },
+
+        reDrawBoard: function() {
+            var cX = 0,
+                cY = 0;
+
+            for (var i = 0; i < ms.settings.rows; i += 1) {
+                cX = 0;
+                for (var j = 0; j < ms.settings.cols; j += 1) {
+                    cX += ms.sprites.cell.w;
+                    ms.playfield[i][j].draw(Game.ctx);
+                }
+                cY += ms.sprites.cell.h;
+            }
+        }
+    };
+
+    window.addEventListener("load", function () {
+        Game.initialize("board", ms.sprites, ms.startGame);
+    });
+
+    var Cell = function(x, y) {
+        this.setup('cell', {x: x, y: y, hasMine: false, neighbourMinesCount: 0, isRevealed: false});
+    };
+
+    Cell.prototype = new Sprite();
+}());
+
+/********************** Logic part to be integrated *****************/
 
 var matrix = [];
 var width;
@@ -45,6 +131,7 @@ function Position(x, y) {
 
 function Cell(position) {
     return {
+        sprite: 'cell',
         position: position,
         hasMine: false,
         neighbourMinesCount: 0,
