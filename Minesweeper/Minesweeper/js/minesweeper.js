@@ -83,12 +83,12 @@ var Playfield = (function () {
         }
         return posibleMinesCoordinates;
     }
-
+    // when every mine is placed on random, increases it's neighbours neighbourMinesCount by one
     function neighbourMinesCountIncreaseForAllNeighbours(cellMatrix, x, y, playfieldWidth, playfieldHeight) {
         for (var neighbourX = x - 1; neighbourX <= x + 1; neighbourX++) {
 
             for (var neighbourY = y - 1; neighbourY <= y + 1; neighbourY++) {
-
+                //neighbour must exist i.e. it must be a valid cell in order to increase it's counter
                 if (isValidCell(neighbourX, neighbourY, playfieldWidth, playfieldHeight)) {
 
                     if (x != neighbourX || y != neighbourY) {
@@ -112,7 +112,7 @@ var Playfield = (function () {
             var currentMineY = possibleMinesCoordinatesMatrix[mineIndex].y;
 
             playfield[currentMineX][currentMineY].hasMine = true;
-
+            
             neighbourMinesCountIncreaseForAllNeighbours(playfield, currentMineX, currentMineY, playfieldWidth, playfieldHeight);
 
             // remove the used coordinates for mine
@@ -128,6 +128,7 @@ var Playfield = (function () {
     }
 }());
 
+//Looks if the neighbour cell we want to check is in the play field
 function isValidCell(x, y, playfieldWidth, playfieldHeight) {
     if (x < 0 || y < 0 || x >= playfieldWidth || y >= playfieldHeight) {
         return false;
@@ -154,6 +155,7 @@ function clickCell(cellMatrix, x, y) {
         gameOver();
         return;
     }
+
     if (cellMatrix[x][y].neighbourMinesCount == 0) {
 
         for (var neighbourX = x - 1; neighbourX <= x + 1; neighbourX++) {
