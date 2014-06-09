@@ -55,6 +55,7 @@
 
                     if (!ms.playfield[rowPos][colPos].isFlagged && ms.playfield[colPos][rowPos].hasMine) {
                         ms.gameover();
+                        ms.drawPlayfield();
                     } else if (!ms.playfield[rowPos][colPos].isFlagged) {
                         ms.playfield[rowPos][colPos].isRevealed = true;
                         ms.playfield[rowPos][colPos].frame = 1;
@@ -95,32 +96,7 @@
 
         gameover: function () {
             console.log('you lost');
-
             ms.isGameOver = true;
-
-            var cX = 0,
-                cY = 0;
-
-            for (var i = 0; i < ms.settings.rows; i += 1) {
-                cX = 0;
-                for (var j = 0; j < ms.settings.cols; j += 1) {
-                    cX += ms.sprites.cell.w;
-                    ms.playfield[i][j].draw(Game.ctx);
-
-                    if (ms.playfield[i][j].hasMine) {
-                        ms.playfield[i][j].frame = 1;
-                        ms.playfield[i][j].draw(Game.ctx);
-
-                        SpriteSheet.draw(Game.ctx,
-                            'mine',
-                            ms.playfield[i][j].x,
-                            ms.playfield[i][j].y);
-                    } else {
-                        ms.playfield[i][j].draw(Game.ctx);
-                    }
-                }
-                cY += ms.sprites.cell.h;
-            }
         },
 
         generatePlayfield: function (rows, cols) {
@@ -161,7 +137,18 @@
                 cX = 0;
                 for (var j = 0; j < ms.settings.cols; j += 1) {
                     cX += ms.sprites.cell.w;
-                    ms.playfield[i][j].draw(Game.ctx);
+
+                    if (ms.playfield[i][j].hasMine && ms.isGameOver) { // if the game is over, draw all the mines
+                        ms.playfield[i][j].frame = 1;
+                        ms.playfield[i][j].draw(Game.ctx);
+
+                        SpriteSheet.draw(Game.ctx,
+                            'mine',
+                            ms.playfield[i][j].x,
+                            ms.playfield[i][j].y);
+                    } else {
+                        ms.playfield[i][j].draw(Game.ctx);
+                    }
 
                     if (ms.playfield[i][j].isFlagged) {
                         SpriteSheet.draw(Game.ctx,
