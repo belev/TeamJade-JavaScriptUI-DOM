@@ -15,8 +15,6 @@ var Game = new function () {
 
 };
 
-
-
 var SpriteSheet = new function () {
     this.map = { };
 

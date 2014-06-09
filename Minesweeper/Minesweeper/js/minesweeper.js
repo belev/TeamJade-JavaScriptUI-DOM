@@ -24,17 +24,19 @@
 
         startGame: function () {
             ms.playfield = ms.generatePlayfield(ms.settings.rows, ms.settings.cols);
+            ms.drawPlayfield();
             ms.eventHandlerSetup();
         },
 
         eventHandlerSetup: function() {
             Game.canvas.addEventListener("click", function (e) {
+                e = e || window.event;
                 e.preventDefault();
 
                 var x = e.pageX,
                     y = e.pageY,
-                    clickedX,
-                    clickedY;
+                    colPos,
+                    rowPos;
 
                 x -= Game.canvas.offsetLeft;
                 y -= Game.canvas.offsetTop;
@@ -42,16 +44,41 @@
                 if (Math.floor(x / ms.sprites.cell.w) >= 0 && Math.floor(x / ms.sprites.cell.w) < 10 &&
                     Math.floor(y / ms.sprites.cell.h) >= 0 && Math.floor(y / ms.sprites.cell.h) < 10) {
 
-                    clickedX = Math.floor(x / ms.sprites.cell.w);
-                    clickedY = Math.floor(y / ms.sprites.cell.h);
+                    colPos = Math.floor(x / ms.sprites.cell.w);
+                    rowPos = Math.floor(y / ms.sprites.cell.h);
 
-                    if (ms.playfield[clickedX][clickedY].hasMine) {
+                    if (!ms.playfield[rowPos][colPos].isFlagged && ms.playfield[colPos][rowPos].hasMine) {
                         alert('you lose');
                         ms.gameover();
-                    } else {
-                        ms.playfield[clickedY][clickedX].isRevealed = true;
-                        ms.playfield[clickedY][clickedX].frame = 1;
-                        ms.reDrawBoard();
+                    } else if (!ms.playfield[rowPos][colPos].isFlagged) {
+                        ms.playfield[rowPos][colPos].isRevealed = true;
+                        ms.playfield[rowPos][colPos].frame = 1;
+                        ms.drawPlayfield();
+                    }
+                }
+            });
+
+            Game.canvas.addEventListener("contextmenu", function (e) {
+                e = e || window.event;
+                e.preventDefault();
+
+                var x = e.pageX,
+                    y = e.pageY,
+                    colPos,
+                    rowPos;
+
+                x -= Game.canvas.offsetLeft;
+                y -= Game.canvas.offsetTop;
+
+                if (Math.floor(x / ms.sprites.cell.w) >= 0 && Math.floor(x / ms.sprites.cell.w) < 10 &&
+                    Math.floor(y / ms.sprites.cell.h) >= 0 && Math.floor(y / ms.sprites.cell.h) < 10) {
+
+                    colPos = Math.floor(x / ms.sprites.cell.w);
+                    rowPos = Math.floor(y / ms.sprites.cell.h);
+
+                    if (!ms.playfield[rowPos][colPos].isRevealed) {
+                        ms.playfield[rowPos][colPos].isFlagged = !ms.playfield[rowPos][colPos].isFlagged;
+                        ms.drawPlayfield();
                     }
                 }
             });
@@ -72,7 +99,6 @@
                 for (var j = 0; j < cols; j += 1) {
                     board[i][j] = new Cell(cX, cY);
                     cX += ms.sprites.cell.w;
-                    board[i][j].draw(Game.ctx);
                 }
                 cY += ms.sprites.cell.h;
             }
@@ -80,7 +106,7 @@
             return board;
         },
 
-        reDrawBoard: function() {
+        drawPlayfield: function() {
             var cX = 0,
                 cY = 0;
 
@@ -89,6 +115,12 @@
                 for (var j = 0; j < ms.settings.cols; j += 1) {
                     cX += ms.sprites.cell.w;
                     ms.playfield[i][j].draw(Game.ctx);
+                    if (ms.playfield[i][j].isFlagged) {
+                        SpriteSheet.draw(Game.ctx,
+                                            'flag',
+                                            ms.playfield[i][j].x,
+                                            ms.playfield[i][j].y);
+                    }
                 }
                 cY += ms.sprites.cell.h;
             }
@@ -100,7 +132,7 @@
     });
 
     var Cell = function(x, y) {
-        this.setup('cell', {x: x, y: y, hasMine: false, neighbourMinesCount: 0, isRevealed: false});
+        this.setup('cell', {x: x, y: y, hasMine: false, neighbourMinesCount: 0, isRevealed: false, isFlagged: false});
     };
 
     Cell.prototype = new Sprite();
