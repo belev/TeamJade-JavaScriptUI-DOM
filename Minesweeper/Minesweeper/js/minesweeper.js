@@ -31,7 +31,7 @@
         },
 
         eventHandlerSetup: function() {
-            Game.canvas.addEventListener("click", function (e) {
+            Game.canvas.on("click", function (e) {
                 if (ms.isGameOver) {
                     return;
                 }
@@ -44,8 +44,8 @@
                     colPos,
                     rowPos;
 
-                x -= Game.canvas.offsetLeft;
-                y -= Game.canvas.offsetTop;
+                x -= Game.canvas[0].offsetLeft;
+                y -= Game.canvas[0].offsetTop;
 
                 if (Math.floor(x / ms.sprites.cell.w) >= 0 && Math.floor(x / ms.sprites.cell.w) < 10 &&
                     Math.floor(y / ms.sprites.cell.h) >= 0 && Math.floor(y / ms.sprites.cell.h) < 10) {
@@ -64,7 +64,7 @@
                 }
             });
 
-            Game.canvas.addEventListener("contextmenu", function (e) {
+            Game.canvas.on("contextmenu", function (e) {
                 if (ms.isGameOver) {
                     return;
                 }
@@ -77,8 +77,8 @@
                     colPos,
                     rowPos;
 
-                x -= Game.canvas.offsetLeft;
-                y -= Game.canvas.offsetTop;
+                x -= Game.canvas[0].offsetLeft;
+                y -= Game.canvas[0].offsetTop;
 
                 if (Math.floor(x / ms.sprites.cell.w) >= 0 && Math.floor(x / ms.sprites.cell.w) < 10 &&
                     Math.floor(y / ms.sprites.cell.h) >= 0 && Math.floor(y / ms.sprites.cell.h) < 10) {

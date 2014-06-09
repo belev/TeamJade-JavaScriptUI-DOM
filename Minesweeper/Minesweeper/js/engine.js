@@ -1,18 +1,15 @@
 var Game = new function () {
 
     this.initialize = function (canvasElementId, sprite_data, callback) {
-        this.canvas = document.getElementById(canvasElementId);
-        this.width = this.canvas.width;
-        this.height= this.canvas.height;
+        this.canvas = $('#'+canvasElementId);
+        this.width = this.canvas[0].width;
+        this.height= this.canvas[0].height;
 
-        this.ctx = this.canvas.getContext && this.canvas.getContext('2d');
+        this.ctx = this.canvas[0].getContext && this.canvas[0].getContext('2d');
         if (!this.ctx) { return alert("Please upgrade your browser to play"); }
 
         SpriteSheet.load(sprite_data, callback);
     };
-
-
-
 };
 
 var SpriteSheet = new function () {
