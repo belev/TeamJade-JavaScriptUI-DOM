@@ -1,9 +1,9 @@
 (function () {
     var ms = {
         settings: {
-            rows: 20,
-            cols: 20,
-            mines: 2
+            rows: 10,
+            cols: 10,
+            mines: 10
         },
 
         sprites: {
@@ -51,48 +51,6 @@
             Game.canvas.on("click", openCell);
             Game.canvas.on("contextmenu", putFlag);
 
-            // if clicked on empty cell traverse all neighbour empty cells and open them
-            // if clicked on full cell open only the clicked cell
-            // other way you have clicked a mine and you die
-
-            function clickCell(row, col) {
-
-                if (!isValidCell(row, col, ms.settings.cols, ms.settings.rows)) {
-                    return;
-                }
-
-                if (ms.playfield[row][col].isRevealed) {
-                    return;
-                }
-
-                ms.playfield[row][col].isRevealed = true;
-                ms.playfield[row][col].frame = 1;
-                ms.unrevealedCount -= 1;
-
-                if (ms.playfield[row][col].hasMine) {
-                    ms.gameover();
-                    return;
-                }
-
-                if (ms.unrevealedCount == ms.settings.mines) {
-                    ms.gameWon();
-                    return;
-                }
-
-                if (ms.playfield[row][col].neighbourMinesCount == 0) {
-
-                    for (var neighbourRow = row - 1; neighbourRow <= row + 1; neighbourRow++) {
-
-                        for (var neighbourCol = col - 1; neighbourCol <= col + 1; neighbourCol++) {
-
-                            if (row != neighbourRow || col != neighbourCol) {
-                                clickCell(neighbourRow, neighbourCol);
-                            }
-                        }
-                    }
-                }
-            }
-
             function openCell(e) {
                 if (ms.isGameOver || ms.isGameWon) {
                     return;
@@ -117,10 +75,16 @@
                         ms.Playfield.isFirstClicked = true;
                     }
 
-                    if (!ms.playfield[rowPos][colPos].isFlagged && ms.playfield[rowPos][colPos].hasMine) {
+                    if (!ms.playfield[rowPos][colPos].isFlagged &&
+                            ms.playfield[rowPos][colPos].hasMine) {
                         ms.gameover();
+
                     } else if (!ms.playfield[rowPos][colPos].isFlagged) {
-                        clickCell(rowPos, colPos);
+                        clickCell(rowPos, colPos); // if the cell is empty, open all the empty cells around it
+
+                        if (ms.unrevealedCount == ms.settings.mines) {
+                            ms.gameWon();
+                        }
                     }
 
                     ms.drawPlayfield();
@@ -153,14 +117,44 @@
                     }
                 }
             }
+
+            // if clicked on empty cell traverse all neighbour empty cells and open them
+            // if clicked on full cell open only the clicked cell
+            function clickCell(row, col) {
+                if (!isValidCell(row, col, ms.settings.cols, ms.settings.rows)) {
+                    return;
+                }
+
+                if (ms.playfield[row][col].isRevealed) {
+                    return;
+                }
+
+                setCellToBeRevealed(row, col);
+
+                if (ms.playfield[row][col].neighbourMinesCount == 0) {
+                    for (var neighbourRow = row - 1; neighbourRow <= row + 1; neighbourRow++) {
+                        for (var neighbourCol = col - 1; neighbourCol <= col + 1; neighbourCol++) {
+                            if (row != neighbourRow || col != neighbourCol) {
+                                clickCell(neighbourRow, neighbourCol);
+                            }
+                        }
+                    }
+                }
+            }
+
+            function setCellToBeRevealed(row, col) {
+                ms.playfield[row][col].isRevealed = true;
+                ms.playfield[row][col].frame = 1;
+                ms.unrevealedCount -= 1;
+            }
         },
 
         gameover: function () {
             ms.stopWatch.stop();
             console.log('you lost');
             console.log('you have played ' + ms.stopWatch.duration() + 's');
-
             ms.isGameOver = true;
+            //TODO: Do some animation here
         },
 
         gameWon: function () {
@@ -168,6 +162,7 @@
             console.log('you won');
             console.log('you have played ' + ms.stopWatch.duration() + 's');
             ms.isGameWon = true;
+            //TODO: Do some animation here
         },
 
         drawPlayfield: function() {
