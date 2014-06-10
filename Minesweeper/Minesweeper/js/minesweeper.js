@@ -36,7 +36,12 @@
         },
 
         startGame: function () {
+            // reset all
+            ms.isGameOver = false;
+            ms.isGameWon = false;
+            ms.stopWatch = null;
             ms.unrevealedCount = ms.settings.cols * ms.settings.rows;
+            ms.Playfield.isFirstClicked = false;
 
             Game.canvas[0].width = ms.settings.cols * ms.sprites.cell.w;
             Game.canvas[0].height = ms.settings.rows * ms.sprites.cell.h;
