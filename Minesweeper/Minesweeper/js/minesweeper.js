@@ -3,7 +3,7 @@
         settings: {
             rows: 20,
             cols: 20,
-            mines: 20
+            mines: 2
         },
 
         sprites: {
@@ -22,25 +22,17 @@
 
         stopWatch: null,
 
-        timeCounter: 0,
-
         playfield: [],
 
-        isGameEnded: false,
+        isGameOver: false,
+
+        isGameWon: false,
 
         unrevealedCount: 0,
 
-        setTimers: function () {
-            setInterval(ms.setTimer, 1000);
-
-            console.log(ms.timeCounter);
+        setTimer: function () {
             ms.stopWatch = new StopWatch();
             ms.stopWatch.start();
-        },
-
-        setTimer: function () {
-            ms.timeCounter += 1;
-            $("#score").text(ms.timeCounter);
         },
 
         startGame: function () {
@@ -53,7 +45,6 @@
 
             ms.drawPlayfield();
             ms.eventHandlerSetup();
-
         },
 
         eventHandlerSetup: function() {
@@ -64,21 +55,21 @@
             // if clicked on full cell open only the clicked cell
             // other way you have clicked a mine and you die
 
-            function clickCell(x, y) {
+            function clickCell(row, col) {
 
-                if (!isValidCell(x, y, ms.settings.cols, ms.settings.rows)) {
+                if (!isValidCell(row, col, ms.settings.cols, ms.settings.rows)) {
                     return;
                 }
 
-                if (ms.playfield[x][y].isRevealed) {
+                if (ms.playfield[row][col].isRevealed) {
                     return;
                 }
 
-                ms.playfield[x][y].isRevealed = true;
-                ms.playfield[x][y].frame = 1;
+                ms.playfield[row][col].isRevealed = true;
+                ms.playfield[row][col].frame = 1;
                 ms.unrevealedCount -= 1;
 
-                if (ms.playfield[x][y].hasMine) {
+                if (ms.playfield[row][col].hasMine) {
                     ms.gameover();
                     return;
                 }
@@ -88,14 +79,14 @@
                     return;
                 }
 
-                if (ms.playfield[x][y].neighbourMinesCount == 0) {
+                if (ms.playfield[row][col].neighbourMinesCount == 0) {
 
-                    for (var neighbourX = x - 1; neighbourX <= x + 1; neighbourX++) {
+                    for (var neighbourRow = row - 1; neighbourRow <= row + 1; neighbourRow++) {
 
-                        for (var neighbourY = y - 1; neighbourY <= y + 1; neighbourY++) {
+                        for (var neighbourCol = col - 1; neighbourCol <= col + 1; neighbourCol++) {
 
-                            if (x != neighbourX || y != neighbourY) {
-                                clickCell(neighbourX, neighbourY);
+                            if (row != neighbourRow || col != neighbourCol) {
+                                clickCell(neighbourRow, neighbourCol);
                             }
                         }
                     }
@@ -103,7 +94,7 @@
             }
 
             function openCell(e) {
-                if (ms.isGameEnded) {
+                if (ms.isGameOver || ms.isGameWon) {
                     return;
                 }
 
@@ -120,9 +111,9 @@
 
                     if (!ms.Playfield.isFirstClicked) {
                         ms.playfield = ms.Playfield.initialize(ms.settings.rows,
-                            ms.settings.cols,
-                            ms.settings.mines,
-                            rowPos, colPos);
+                                                                ms.settings.cols,
+                                                                ms.settings.mines,
+                                                                rowPos, colPos);
                         ms.Playfield.isFirstClicked = true;
                     }
 
@@ -137,7 +128,7 @@
             }
 
             function putFlag(e) {
-                if (ms.isGameEnded) {
+                if (ms.isGameOver || ms.isGameWon) {
                     return;
                 }
 
@@ -169,14 +160,14 @@
             console.log('you lost');
             console.log('you have played ' + ms.stopWatch.duration() + 's');
 
-            ms.isGameEnded = true;
+            ms.isGameOver = true;
         },
 
         gameWon: function () {
             ms.stopWatch.stop();
             console.log('you won');
             console.log('you have played ' + ms.stopWatch.duration() + 's');
-            ms.isGameEnded = true;
+            ms.isGameWon = true;
         },
 
         drawPlayfield: function() {
@@ -190,14 +181,17 @@
                 for (var j = 0; j < ms.settings.cols; j += 1) {
                     cX += ms.sprites.cell.w;
 
-                    if (ms.playfield[i][j].hasMine && ms.isGameEnded) { // if the game is over, draw all the mines
+                    if (ms.playfield[i][j].hasMine && ms.isGameOver && !ms.isGameWon) { // if the game is over, draw all the mines
                         ms.playfield[i][j].frame = 1;
                         ms.playfield[i][j].draw(Game.ctx);
 
                         SpriteSheet.draw(Game.ctx,
-                            'mine',
-                            ms.playfield[i][j].x,
-                            ms.playfield[i][j].y);
+                                            'mine',
+                                            ms.playfield[i][j].x,
+                                            ms.playfield[i][j].y);
+
+                        continue;
+
                     } else {
                         ms.playfield[i][j].draw(Game.ctx);
                     }
@@ -290,7 +284,7 @@
                     possibleMinesCoordinatesMatrix.splice(mineIndex, 1);
                 }
 
-                ms.setTimers();
+                ms.setTimer();
 
                 return playfield;
             }
