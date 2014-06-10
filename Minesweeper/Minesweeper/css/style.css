@@ -58,8 +58,23 @@ h1 {
     font-size: 20px;
 }
 
-#menu {
+div {
+    margin-top: 10px;
+}
 
+.ui-button {
+    display: block;
+    width: 200px;
+    height: 50px;
+    margin: 0 auto 5px;
+}
+
+#game {
+    width: 500px;
+}
+
+#ui-control, #game {
+    display: inline-block;
 }
 
 #board {

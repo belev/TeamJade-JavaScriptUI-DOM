@@ -1,5 +1,4 @@
 (function () {
-
     var ms = {
         settings: {
             rows: 10,
@@ -21,11 +20,28 @@
             flag: { sx: 220, sy: 0, w: 20, h: 20, frames: 1 }
         },
 
+        stopWatch: null,
+
+        timeCounter: 0,
+
         playfield: [],
 
         isGameEnded: false,
 
         unrevealedCount: 0,
+
+        setTimers: function () {
+            setInterval(ms.setTimer, 1000);
+
+            console.log(ms.timeCounter);
+            ms.stopWatch = new StopWatch();
+            ms.stopWatch.start();
+        },
+
+        setTimer: function () {
+            ms.timeCounter += 1;
+            $("#score").text(ms.timeCounter);
+        },
 
         startGame: function () {
             ms.unrevealedCount = ms.settings.cols * ms.settings.rows;
@@ -37,6 +53,7 @@
 
             ms.drawPlayfield();
             ms.eventHandlerSetup();
+
         },
 
         eventHandlerSetup: function() {
@@ -56,7 +73,6 @@
                 if (ms.playfield[x][y].isRevealed) {
                     return;
                 }
-
 
                 ms.playfield[x][y].isRevealed = true;
                 ms.playfield[x][y].frame = 1;
@@ -117,8 +133,6 @@
                     }
 
                     ms.drawPlayfield();
-
-                    console.log(ms.unrevealedCount);
                 }
             }
 
@@ -151,12 +165,17 @@
         },
 
         gameover: function () {
+            ms.stopWatch.stop();
             console.log('you lost');
+            console.log('you have played ' + ms.stopWatch.duration() + 's');
+
             ms.isGameEnded = true;
         },
 
         gameWon: function () {
+            ms.stopWatch.stop();
             console.log('you won');
+            console.log('you have played ' + ms.stopWatch.duration() + 's');
             ms.isGameEnded = true;
         },
 
@@ -269,6 +288,8 @@
                     possibleMinesCoordinatesMatrix.splice(mineIndex, 1);
                 }
 
+                ms.setTimers();
+
                 return playfield;
             }
 
@@ -280,7 +301,11 @@
         }())
     };
 
-    window.addEventListener("load", function () {
+    // start game button
+
+    var startBtn = $("#startBtn");
+
+    startBtn.on("click", function () {
         Game.initialize("board", ms.sprites, ms.startGame);
     });
 
@@ -289,7 +314,11 @@
     };
 
     Cell.prototype = new Sprite();
+
+
 }());
+
+
 
 /********************** Logic part to be integrated *****************/
 
