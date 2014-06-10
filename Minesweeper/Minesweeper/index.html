@@ -5,19 +5,23 @@
     <link rel="stylesheet" type="text/css" href="css/style.css" />
 </head>
 <body>
-    <h1>MineSweeper</h1>
+    <div class="wrapper">
+        <h1>MineSweeper</h1>
 
-    <div id="game">
-        <canvas id="board" width="200" height="200"></canvas>
-    </div>
-
-    <div id="ui-control">
-        <div id="startScreen">
-            <button class="ui-button" id="startBtn">New Game</button>
-            <button class="ui-button" id="settingsBtn">Settings</button>
-            <button class="ui-button" id="helpBtn">Help</button>
-            <button class="ui-button" id="exitBtn">Exit</button>
+        <div id="game" class="container">
+            <canvas id="board" width="200" height="200"></canvas>
+            <button class="ui-button" id="backToMenu">Back To Menu</button>
         </div>
+
+        <div id="menu" class="container">
+            <div id="startScreen">
+                <button class="ui-button" id="startBtn">New Game</button>
+                <button class="ui-button" id="settingsBtn">Settings</button>
+                <button class="ui-button" id="helpBtn">Help</button>
+                <button class="ui-button" id="exitBtn">Exit</button>
+            </div>
+        </div>
+
     </div>
 
     <script src="js/lib/jquery.js"></script>

@@ -1,9 +1,9 @@
 (function () {
     var ms = {
         settings: {
-            rows: 10,
-            cols: 10,
-            mines: 10
+            rows: 20,
+            cols: 20,
+            mines: 100
         },
 
         sprites: {
@@ -216,7 +216,6 @@
 
         Playfield : (function () {
             function initializeEmptyPlayfield(width, height) {
-
                 var cellMatrix = [];
 
                 for (var i = 0; i < width; i++) {
@@ -233,29 +232,26 @@
             }
 
             function getPossibleMinesPositions(playfieldWidth, playfieldHeight, firstClickedCellX, firstClickedCellY) {
-                var posibleMinesCoordinates = [];
+                var possibleMinesCoordinates = [];
 
                 for (var i = 0; i < playfieldWidth; i++) {
-
                     for (var j = 0; j < playfieldHeight; j++) {
-
                         if (i != firstClickedCellX || j != firstClickedCellY) {
-                            posibleMinesCoordinates.push(new Position(i, j));
+                            possibleMinesCoordinates.push(new Position(i, j));
                         }
                     }
                 }
-                return posibleMinesCoordinates;
+
+                return possibleMinesCoordinates;
             }
 
             // when every mine is placed on random, increases it's neighbours neighbourMinesCount by one
             function neighbourMinesCountIncreaseForAllNeighbours(cellMatrix, x, y, playfieldWidth, playfieldHeight) {
                 for (var neighbourX = x - 1; neighbourX <= x + 1; neighbourX++) {
-
                     for (var neighbourY = y - 1; neighbourY <= y + 1; neighbourY++) {
                         //neighbour must exist i.e. it must be a valid cell in order to increase it's counter
                         if (neighbourX >= 0 && neighbourY >= 0 &&
                                 neighbourX < ms.settings.cols && neighbourY < ms.settings.rows) {
-
                             if (x != neighbourX || y != neighbourY) {
                                 cellMatrix[neighbourX][neighbourY].neighbourMinesCount++;
                             }
