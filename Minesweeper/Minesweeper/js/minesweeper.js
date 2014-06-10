@@ -1,9 +1,9 @@
 (function () {
     var ms = {
         settings: {
-            rows: 10,
-            cols: 10,
-            mines: 1
+            rows: 20,
+            cols: 20,
+            mines: 20
         },
 
         sprites: {
@@ -180,6 +180,8 @@
         },
 
         drawPlayfield: function() {
+            Game.ctx.clearRect(0, 0, Game.canvas[0].width, Game.canvas[0].height);
+
             var cX = 0,
                 cY = 0;
 
