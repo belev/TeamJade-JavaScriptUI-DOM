@@ -80,7 +80,8 @@
                         ms.gameover();
 
                     } else if (!ms.playfield[rowPos][colPos].isFlagged) {
-                        clickCell(rowPos, colPos); // if the cell is empty, open all the empty cells around it
+                        // click on the cell, if the cell is empty, open all the empty cells around it
+                        clickCell(rowPos, colPos);
 
                         if (ms.unrevealedCount == ms.settings.mines) {
                             ms.gameWon();
@@ -121,7 +122,10 @@
             // if clicked on empty cell traverse all neighbour empty cells and open them
             // if clicked on full cell open only the clicked cell
             function clickCell(row, col) {
-                if (!isValidCell(row, col, ms.settings.cols, ms.settings.rows)) {
+
+                // check if the cell we want to reveal is in the play field
+                if (col < 0 || row < 0 ||
+                        col >= ms.settings.cols || row >= ms.settings.rows) {
                     return;
                 }
 
@@ -242,13 +246,15 @@
                 }
                 return posibleMinesCoordinates;
             }
+
             // when every mine is placed on random, increases it's neighbours neighbourMinesCount by one
             function neighbourMinesCountIncreaseForAllNeighbours(cellMatrix, x, y, playfieldWidth, playfieldHeight) {
                 for (var neighbourX = x - 1; neighbourX <= x + 1; neighbourX++) {
 
                     for (var neighbourY = y - 1; neighbourY <= y + 1; neighbourY++) {
                         //neighbour must exist i.e. it must be a valid cell in order to increase it's counter
-                        if (isValidCell(neighbourX, neighbourY, playfieldWidth, playfieldHeight)) {
+                        if (neighbourX >= 0 && neighbourY >= 0 &&
+                                neighbourX < ms.settings.cols && neighbourY < ms.settings.rows) {
 
                             if (x != neighbourX || y != neighbourY) {
                                 cellMatrix[neighbourX][neighbourY].neighbourMinesCount++;
@@ -284,6 +290,17 @@
                 return playfield;
             }
 
+            function getRandomInt(min, max) {
+                return Math.floor(Math.random() * (max - min + 1)) + min;
+            }
+
+            function Position(x, y) {
+                return {
+                    x: x,
+                    y: y
+                }
+            }
+
             return {
                 initialize: initializePlayfield,
                 initializeEmpty: initializeEmptyPlayfield,
@@ -292,51 +309,29 @@
         }())
     };
 
-    // start game button
-
-    var startBtn = $("#startBtn");
-
-    startBtn.on("click", function () {
-        Game.initialize("board", ms.sprites, ms.startGame);
-    });
-
     var Cell = function(x, y) {
         this.setup('cell', {x: x, y: y, hasMine: false, neighbourMinesCount: 0, isRevealed: false, isFlagged: false});
     };
 
     Cell.prototype = new Sprite();
 
+    // start game button
+    var startBtn = $("#startBtn");
 
+    startBtn.on("click", function () {
+        Game.initialize("board", ms.sprites, ms.startGame);
+    });
 }());
 
 
-
-/********************** Logic part to be integrated *****************/
-
-var matrix = [];
-var width;
-var height;
-var gameState = '';
-
-function getRandomInt(min, max) {
-    return Math.floor(Math.random() * (max - min + 1)) + min;
-}
-
-function Position(x, y) {
-    return {
-        x: x,
-        y: y
-    }
-}
-
-//Looks if the neighbour cell we want to check is in the play field
-function isValidCell(x, y, playfieldWidth, playfieldHeight) {
-    if (x < 0 || y < 0 || x >= playfieldWidth || y >= playfieldHeight) {
-        return false;
-    }
-    return true;
-}
-
+//var matrix = [];
+//var width;
+//var height;
+//var gameState = '';
+//
+//
+//
+//
 //var matrix = generateCellMatrix(3, 4);
 //var matrix2 = generatePossibleMinesMatrix(3, 4, 2, 2);
 //var matrix3 = generateMineMatrix(10, 10, 15, 2, 2);
