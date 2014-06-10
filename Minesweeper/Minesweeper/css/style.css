@@ -103,6 +103,14 @@ div {
     cursor: pointer;
 }
 
+.customSettings {
+    text-align: center;
+}
+
+input[type="number"] {
+    border: 2px solid black;
+}
+
 #game {
     text-align: center;
     margin: 20px;

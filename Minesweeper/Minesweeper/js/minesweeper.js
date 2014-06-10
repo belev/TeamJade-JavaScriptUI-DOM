@@ -1,9 +1,9 @@
-(function () {
+(function ($) {
     var ms = {
         settings: {
-            rows: 20,
-            cols: 20,
-            mines: 100
+            rows: 8,
+            cols: 8,
+            mines: 20
         },
 
         sprites: {
@@ -42,6 +42,13 @@
             ms.stopWatch = null;
             ms.unrevealedCount = ms.settings.cols * ms.settings.rows;
             ms.Playfield.isFirstClicked = false;
+            ms.settings.rows = $("#rows").val() || 8;
+            ms.settings.cols = $("#cols").val() || 8;
+            ms.settings.mines = $("#mines").val() || 10;
+
+            if (ms.settings.mines >= ms.settings.rows * ms.settings.cols) {
+                ms.settings.mines = ms.settings.rows * ms.settings.cols - 1;
+            }
 
             Game.canvas[0].width = ms.settings.cols * ms.sprites.cell.w;
             Game.canvas[0].height = ms.settings.rows * ms.sprites.cell.h;
@@ -322,7 +329,7 @@
     startBtn.on("click", function () {
         Game.initialize("board", ms.sprites, ms.startGame);
     });
-}());
+}($));
 
 
 //var matrix = [];

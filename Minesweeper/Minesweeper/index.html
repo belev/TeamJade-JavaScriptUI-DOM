@@ -15,21 +15,33 @@
         </div>
 
         <div id="menu" class="container">
-            <div id="startScreen">
-                <button class="ui-button" id="startBtn">New Game</button>
-                <button class="ui-button" id="settingsBtn">Settings</button>
-                <button class="ui-button" id="helpBtn">Help</button>
-                <button class="ui-button" id="exitBtn">Exit</button>
-            </div>
+            <button class="ui-button" id="startBtn">New Game</button>
+            <button class="ui-button" id="settingsBtn">Settings</button>
+            <button class="ui-button" id="helpBtn">Help</button>
+            <button class="ui-button" id="exitBtn">Exit</button>
         </div>
 
+        <div id="settings" class="container">
+            <button class="ui-button" id="eightBtn">8x8 with 10 mines</button>
+            <button class="ui-button" id="sixteenBtn">16x16 with 20 mines</button>
+            <button class="ui-button" id="customBtn">Custom</button>
+
+            <div class="customSettings" id="customSettings">
+                <label for="rows">Rows:</label> <input type="number" name="rows" id="rows" value="8" min="1" max="20"><br/>
+                <label for="cols">Cols:</label> <input type="number" name="cols" id="cols" value="8" min="1" max="20"><br/>
+                <label for="mines">Mines:</label> <input type="number" name="mines" id="mines" value="10" min="1" max="399"/>
+            </div>
+
+            <button class="ui-button" id="saveBtn">Save</button>
+            <button class="ui-button" id="backBtn">Back</button>
+        </div>
     </div>
 
     <script src="js/lib/jquery.js"></script>
     <script src="js/lib/raphael.js"></script>
+    <script src="js/stopwatch.js"></script>
     <script src="js/menu.js"></script>
     <script src="js/engine.js"></script>
-    <script src="js/stopwatch.js"></script>
     <script src="js/minesweeper.js"></script>
 </body>
 </html>
