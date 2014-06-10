@@ -37,18 +37,18 @@
 
         startGame: function () {
             // reset all
+            var rows = $("#rows").val() || 8,
+                cols = $("#cols").val() || 8,
+                mines = $("#mines").val() || 10;
+
             ms.isGameOver = false;
             ms.isGameWon = false;
             ms.stopWatch = null;
             ms.unrevealedCount = ms.settings.cols * ms.settings.rows;
             ms.Playfield.isFirstClicked = false;
-            ms.settings.rows = $("#rows").val() || 8;
-            ms.settings.cols = $("#cols").val() || 8;
-            ms.settings.mines = $("#mines").val() || 10;
-
-            if (ms.settings.mines >= ms.settings.rows * ms.settings.cols) {
-                ms.settings.mines = ms.settings.rows * ms.settings.cols - 1;
-            }
+            ms.settings.rows = rows > 20 ? 20 : rows;
+            ms.settings.cols = cols > 20 ? 20 : cols;
+            ms.settings.mines = mines > rows * cols ? rows * cols - 2 : mines;
 
             Game.canvas[0].width = ms.settings.cols * ms.sprites.cell.w;
             Game.canvas[0].height = ms.settings.rows * ms.sprites.cell.h;
@@ -60,6 +60,11 @@
         },
 
         eventHandlerSetup: function() {
+            // first unbind all the previous events (fixing the double right click bug after click the new game button twice)
+            Game.canvas.off("click");
+            Game.canvas.off("contextmenu");
+
+            // then bind the events
             Game.canvas.on("click", openCell);
             Game.canvas.on("contextmenu", putFlag);
 
@@ -125,9 +130,9 @@
 
                     if (!ms.playfield[rowPos][colPos].isRevealed) {
                         ms.playfield[rowPos][colPos].isFlagged = !ms.playfield[rowPos][colPos].isFlagged;
-
-                        ms.drawPlayfield();
                     }
+
+                    ms.drawPlayfield();
                 }
             }
 
