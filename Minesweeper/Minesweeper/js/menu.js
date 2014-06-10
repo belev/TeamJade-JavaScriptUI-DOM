@@ -62,23 +62,23 @@
 
     $("#backBtn").on('click', function () {
         settings.fadeOut("slow", function () {
-            menu.fadeIn("slow");
+            menu.fadeIn();
         });
     });
 
     $("#backToMenu").on('click', function () {
         game.fadeOut("slow", function() {
-            menu.fadeIn("slow");
+            menu.fadeIn();
         });
     });
 
     function customBtnToggle() {
-        customSettings.fadeToggle("slow");
-        saveBtn.fadeToggle("slow");
+        customSettings.fadeToggle();
+        saveBtn.toggle();
 
-        $("#eightBtn").fadeToggle("slow");
-        $("#sixteenBtn").fadeToggle("slow");
-        $("#backBtn").fadeToggle("slow");
+        $("#eightBtn").toggle();
+        $("#sixteenBtn").toggle();
+        $("#backBtn").toggle();
     }
 
     function resetAllOptionsButtons() {
