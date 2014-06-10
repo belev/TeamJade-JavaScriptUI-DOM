@@ -7,7 +7,7 @@
         selectedColor = 'yellowgreen',
         cols = $("#cols"),
         rows = $("#rows"),
-        mines = $("mines");
+        mines = $("#mines");
 
     $("#startBtn").on('click', function () {
         menu.fadeOut("slow", function () {
