@@ -74,7 +74,7 @@ div {
 }
 
 .wrapper {
-    background: url("../img/border.svg") no-repeat top left;
+    background: url("../img/border-ipad.svg") no-repeat top left;
     background-size: contain;
     width: 600px;
     height: 780px;
