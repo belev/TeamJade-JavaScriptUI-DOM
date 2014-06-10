@@ -1,17 +1,10 @@
 (function () {
-    var states = Object.freeze({
-        GAME_ON: 'GameOn',
-        MENU: 'Menu',
-        GAME_ON_EMPTY_FIELD: 'GameOnEmptyField',
-        GAME_OVER: 'GameOver',
-        GAME_WON: 'GameWon'});
 
     var ms = {
         settings: {
-            rows: 20,
-            cols: 20,
-            mines: 100,
-            gameState: states.MENU
+            rows: 10,
+            cols: 10,
+            mines: 1
         },
 
         sprites: {
@@ -30,9 +23,13 @@
 
         playfield: [],
 
-        isGameOver: false,
+        isGameEnded: false,
+
+        unrevealedCount: 0,
 
         startGame: function () {
+            ms.unrevealedCount = ms.settings.cols * ms.settings.rows;
+
             Game.canvas[0].width = ms.settings.cols * ms.sprites.cell.w;
             Game.canvas[0].height = ms.settings.rows * ms.sprites.cell.h;
 
@@ -43,80 +40,124 @@
         },
 
         eventHandlerSetup: function() {
-            Game.canvas.on("click", function (e) {
-                if (ms.isGameOver) {
+            Game.canvas.on("click", openCell);
+            Game.canvas.on("contextmenu", putFlag);
+
+            // if clicked on empty cell traverse all neighbour empty cells and open them
+            // if clicked on full cell open only the clicked cell
+            // other way you have clicked a mine and you die
+
+            function clickCell(x, y) {
+
+                if (!isValidCell(x, y, ms.settings.cols, ms.settings.rows)) {
+                    return;
+                }
+
+                if (ms.playfield[x][y].isRevealed) {
+                    return;
+                }
+
+
+                ms.playfield[x][y].isRevealed = true;
+                ms.playfield[x][y].frame = 1;
+                ms.unrevealedCount -= 1;
+
+                if (ms.playfield[x][y].hasMine) {
+                    ms.gameover();
+                    return;
+                }
+
+                if (ms.unrevealedCount == ms.settings.mines) {
+                    ms.gameWon();
+                    return;
+                }
+
+                if (ms.playfield[x][y].neighbourMinesCount == 0) {
+
+                    for (var neighbourX = x - 1; neighbourX <= x + 1; neighbourX++) {
+
+                        for (var neighbourY = y - 1; neighbourY <= y + 1; neighbourY++) {
+
+                            if (x != neighbourX || y != neighbourY) {
+                                clickCell(neighbourX, neighbourY);
+                            }
+                        }
+                    }
+                }
+            }
+
+            function openCell(e) {
+                if (ms.isGameEnded) {
                     return;
                 }
 
                 e = e || window.event;
                 e.preventDefault();
 
-                var x = e.pageX,
-                    y = e.pageY,
-                    colPos,
-                    rowPos;
-
-                x -= Game.canvas[0].offsetLeft;
-                y -= Game.canvas[0].offsetTop;
-
-                if (Math.floor(x / ms.sprites.cell.w) >= 0 && Math.floor(x / ms.sprites.cell.w) < ms.settings.cols &&
-                    Math.floor(y / ms.sprites.cell.h) >= 0 && Math.floor(y / ms.sprites.cell.h) < ms.settings.rows) {
-
-                    colPos = Math.floor(x / ms.sprites.cell.w);
+                var x = e.pageX - Game.canvas[0].offsetLeft,
+                    y = e.pageY - Game.canvas[0].offsetTop,
+                    colPos = Math.floor(x / ms.sprites.cell.w),
                     rowPos = Math.floor(y / ms.sprites.cell.h);
 
+                if (colPos >= 0 && colPos < ms.settings.cols &&
+                        rowPos >= 0 && rowPos < ms.settings.rows) {
+
                     if (!ms.Playfield.isFirstClicked) {
-                    ms.playfield = ms.Playfield.initialize(ms.settings.rows,
-                                                            ms.settings.cols,
-                                                            ms.settings.mines,
-                                                            rowPos, colPos);
+                        ms.playfield = ms.Playfield.initialize(ms.settings.rows,
+                            ms.settings.cols,
+                            ms.settings.mines,
+                            rowPos, colPos);
                         ms.Playfield.isFirstClicked = true;
                     }
 
                     if (!ms.playfield[rowPos][colPos].isFlagged && ms.playfield[rowPos][colPos].hasMine) {
                         ms.gameover();
-                        ms.drawPlayfield();
                     } else if (!ms.playfield[rowPos][colPos].isFlagged) {
-                        ms.playfield[rowPos][colPos].isRevealed = true;
-                        ms.playfield[rowPos][colPos].frame = 1;
-                        ms.drawPlayfield();
+                        clickCell(rowPos, colPos);
                     }
-                }
-            });
 
-            Game.canvas.on("contextmenu", function (e) {
-                if (ms.isGameOver) {
+                    ms.drawPlayfield();
+
+                    console.log(ms.unrevealedCount);
+                }
+            }
+
+            function putFlag(e) {
+                if (ms.isGameEnded) {
                     return;
                 }
 
                 e = e || window.event;
                 e.preventDefault();
 
-                var x = e.pageX,
-                    y = e.pageY,
-                    colPos,
-                    rowPos;
+                var x = e.pageX - Game.canvas[0].offsetLeft,
+                    y = e.pageY - Game.canvas[0].offsetTop,
+                    colPos = Math.floor(x / ms.sprites.cell.w),
+                    rowPos = Math.floor(y / ms.sprites.cell.h);
 
-                x -= Game.canvas[0].offsetLeft;
-                y -= Game.canvas[0].offsetTop;
-
-                if (Math.floor(x / ms.sprites.cell.w) >= 0 && Math.floor(x / ms.sprites.cell.w) < ms.settings.cols &&
-                    Math.floor(y / ms.sprites.cell.h) >= 0 && Math.floor(y / ms.sprites.cell.h) < ms.settings.rows) {
+                if (colPos >= 0 && colPos < ms.settings.cols &&
+                    rowPos >= 0 && rowPos < ms.settings.rows) {
 
                     colPos = Math.floor(x / ms.sprites.cell.w);
                     rowPos = Math.floor(y / ms.sprites.cell.h);
 
                     if (!ms.playfield[rowPos][colPos].isRevealed) {
                         ms.playfield[rowPos][colPos].isFlagged = !ms.playfield[rowPos][colPos].isFlagged;
+
                         ms.drawPlayfield();
                     }
                 }
-            });
+            }
         },
 
         gameover: function () {
             console.log('you lost');
-            ms.isGameOver = true;
+            ms.isGameEnded = true;
+        },
+
+        gameWon: function () {
+            console.log('you won');
+            ms.isGameEnded = true;
         },
 
         drawPlayfield: function() {
@@ -128,7 +169,7 @@
                 for (var j = 0; j < ms.settings.cols; j += 1) {
                     cX += ms.sprites.cell.w;
 
-                    if (ms.playfield[i][j].hasMine && ms.isGameOver) { // if the game is over, draw all the mines
+                    if (ms.playfield[i][j].hasMine && ms.isGameEnded) { // if the game is over, draw all the mines
                         ms.playfield[i][j].frame = 1;
                         ms.playfield[i][j].draw(Game.ctx);
 
@@ -161,6 +202,7 @@
 
         Playfield : (function () {
             function initializeEmptyPlayfield(width, height) {
+
                 var cellMatrix = [];
 
                 for (var i = 0; i < width; i++) {
@@ -256,13 +298,8 @@ var width;
 var height;
 var gameState = '';
 
-
 function getRandomInt(min, max) {
     return Math.floor(Math.random() * (max - min + 1)) + min;
-}
-
-function gameOver() {
-    //some more code
 }
 
 function Position(x, y) {
@@ -272,92 +309,6 @@ function Position(x, y) {
     }
 }
 
-function Cell(position) {
-    return {
-        sprite: 'cell',
-        position: position,
-        hasMine: false,
-        neighbourMinesCount: 0,
-        isRevealed: false
-    }
-}
-
-var Playfield = (function () {
-    function initializeEmptyPlayfield(width, height) {
-        var cellMatrix = [];
-
-        for (var i = 0; i < width; i++) {
-            var currentRow = [];
-
-            for (var j = 0; j < height; j++) {
-                var cellCoordinates = new Position(i, j);
-                currentRow.push(new Cell(cellCoordinates));
-            }
-            cellMatrix.push(currentRow);
-        }
-
-        return cellMatrix;
-    }
-
-    function getPossibleMinesPositions(playfieldWidth, playfieldHeight, firstClickedCellX, firstClickedCellY) {
-        var posibleMinesCoordinates = [];
-
-        for (var i = 0; i < playfieldWidth; i++) {
-
-            for (var j = 0; j < playfieldHeight; j++) {
-
-                if (i != firstClickedCellX || j != firstClickedCellY) {
-                    posibleMinesCoordinates.push(new Position(i, j));
-                }
-            }
-        }
-        return posibleMinesCoordinates;
-    }
-    // when every mine is placed on random, increases it's neighbours neighbourMinesCount by one
-    function neighbourMinesCountIncreaseForAllNeighbours(cellMatrix, x, y, playfieldWidth, playfieldHeight) {
-        for (var neighbourX = x - 1; neighbourX <= x + 1; neighbourX++) {
-
-            for (var neighbourY = y - 1; neighbourY <= y + 1; neighbourY++) {
-                //neighbour must exist i.e. it must be a valid cell in order to increase it's counter
-                if (isValidCell(neighbourX, neighbourY, playfieldWidth, playfieldHeight)) {
-
-                    if (x != neighbourX || y != neighbourY) {
-                        cellMatrix[neighbourX][neighbourY].neighbourMinesCount++;
-                    }
-                }
-            }
-        }
-    }
-
-    function initializePlayfield(playfieldWidth, playfieldHeight, numberOfMines, selectedX, selectedY) {
-        var playfield = initializeEmptyPlayfield(playfieldWidth, playfieldHeight);
-
-        // get all possible coordinates for mines after the first click on the playfield
-        var possibleMinesCoordinatesMatrix = getPossibleMinesPositions(playfieldWidth, playfieldHeight, selectedX, selectedY);
-
-        // place all mines on the playfield
-        for (var i = 0; i < numberOfMines; i++) {
-            var mineIndex = getRandomInt(0, possibleMinesCoordinatesMatrix.length - 1);
-            var currentMineX = possibleMinesCoordinatesMatrix[mineIndex].x;
-            var currentMineY = possibleMinesCoordinatesMatrix[mineIndex].y;
-
-            playfield[currentMineX][currentMineY].hasMine = true;
-            
-            neighbourMinesCountIncreaseForAllNeighbours(playfield, currentMineX, currentMineY, playfieldWidth, playfieldHeight);
-
-            // remove the used coordinates for mine
-            // so that there has not two mines on one cell
-            possibleMinesCoordinatesMatrix.splice(mineIndex, 1);
-        }
-
-        return playfield;
-    }
-
-    return {
-        initialize: initializePlayfield
-    }
-}());
-
 //Looks if the neighbour cell we want to check is in the play field
 function isValidCell(x, y, playfieldWidth, playfieldHeight) {
     if (x < 0 || y < 0 || x >= playfieldWidth || y >= playfieldHeight) {
@@ -366,73 +317,38 @@ function isValidCell(x, y, playfieldWidth, playfieldHeight) {
     return true;
 }
 
-// if clicked on empty cell traverse all neighbour empty cells and open them
-// if clicked on full cell open only the clicked cell
-// other way you have clicked a mine and you die
-function clickCell(cellMatrix, x, y) {
-
-    if (!isValidCell(x, y, width, height)) {
-        return;
-    }
-
-    if (cellMatrix[x][y].isRevealed) {
-        return;
-    }
-
-    cellMatrix[x][y].isRevealed = true;
-
-    if (cellMatrix[x][y].hasMine) {
-        gameOver();
-        return;
-    }
-
-    if (cellMatrix[x][y].neighbourMinesCount == 0) {
-
-        for (var neighbourX = x - 1; neighbourX <= x + 1; neighbourX++) {
-
-            for (var neighbourY = y - 1; neighbourY <= y + 1; neighbourY++) {
-
-                if (x != neighbourX || y != neighbourY) {
-                    clickCell(cellMatrix, neighbourX, neighbourY);
-                }
-            }
-        }
-    }
-}
-
-
 //var matrix = generateCellMatrix(3, 4);
 //var matrix2 = generatePossibleMinesMatrix(3, 4, 2, 2);
 //var matrix3 = generateMineMatrix(10, 10, 15, 2, 2);
-var playfieldWidth = 10;
-var playfieldHeight = 10;
-
-var playfield = Playfield.initialize(10, 10, 20, 0, 0);
-consolePrintPlayfield(playfield, playfieldWidth, playfieldHeight);
-
-function consolePrintPlayfield(matrix, width, height) {
-
-    for (var i = 0; i < width; i++) {
-        var line = '';
-        for (var j = 0; j < height; j++) {
-            if (matrix[i][j].hasMine) {
-                line += 'X';
-            }
-            else {
-                line += matrix[i][j].neighbourMinesCount;
-            }
-
-            if (matrix[i][j].isRevealed) {
-                line += 'r';
-            }
-            else {
-                line += '?';
-            }
-            line += ' ';
-        }
-
-        console.log(line);
-    }
-}
+//var playfieldWidth = 10;
+//var playfieldHeight = 10;
+//
+//var playfield = Playfield.initialize(10, 10, 20, 0, 0);
+//consolePrintPlayfield(playfield, playfieldWidth, playfieldHeight);
+//
+//function consolePrintPlayfield(matrix, width, height) {
+//
+//    for (var i = 0; i < width; i++) {
+//        var line = '';
+//        for (var j = 0; j < height; j++) {
+//            if (matrix[i][j].hasMine) {
+//                line += 'X';
+//            }
+//            else {
+//                line += matrix[i][j].neighbourMinesCount;
+//            }
+//
+//            if (matrix[i][j].isRevealed) {
+//                line += 'r';
+//            }
+//            else {
+//                line += '?';
+//            }
+//            line += ' ';
+//        }
+//
+//        console.log(line);
+//    }
+//}
 
 //consolePrintPlayfield(matrix3, 10, 10);
