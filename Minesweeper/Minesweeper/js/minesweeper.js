@@ -30,6 +30,8 @@
 
         unrevealedCount: 0,
 
+        flagsLeft: 0,
+
         startTimer: function () {
             ms.$timer.trigger("start");
         },
@@ -40,18 +42,19 @@
 
         startGame: function () {
             // reset all
-            var rows = $("#rows").val() || 8,
-                cols = $("#cols").val() || 8,
-                mines = $("#mines").val() || 10;
+            var $rows = parseInt($("#rows").val()) || 8,
+                $cols = parseInt($("#cols").val()) || 8,
+                $mines = parseInt($("#mines").val()) || 10;
 
             ms.isGameOver = false;
             ms.isGameWon = false;
             ms.$timer = $("#timerValue").text("0");
             ms.unrevealedCount = ms.settings.cols * ms.settings.rows;
             ms.Playfield.isFirstClicked = false;
-            ms.settings.rows = rows > 20 ? 20 : rows;
-            ms.settings.cols = cols > 20 ? 20 : cols;
-            ms.settings.mines = mines > rows * cols ? rows * cols - 2 : mines;
+            ms.settings.rows = $rows > 20 ? 20 : $rows;
+            ms.settings.cols = $cols > 20 ? 20 : $cols;
+            ms.settings.mines = $mines > $rows * $cols ? $rows * $cols - 2 : $mines;
+            ms.flagsLeft = ms.settings.mines;
 
             Game.canvas[0].width = ms.settings.cols * ms.sprites.cell.w;
             Game.canvas[0].height = ms.settings.rows * ms.sprites.cell.h;
@@ -102,10 +105,6 @@
                     } else if (!ms.playfield[rowPos][colPos].isFlagged) {
                         // click on the cell, if the cell is empty, open all the empty cells around it
                         clickCell(rowPos, colPos);
-
-                        if (ms.unrevealedCount == ms.settings.mines) {
-                            ms.gameWon();
-                        }
                     }
 
                     ms.drawPlayfield();
@@ -132,7 +131,19 @@
                     rowPos = Math.floor(y / ms.sprites.cell.h);
 
                     if (!ms.playfield[rowPos][colPos].isRevealed) {
-                        ms.playfield[rowPos][colPos].isFlagged = !ms.playfield[rowPos][colPos].isFlagged;
+                        if (ms.playfield[rowPos][colPos].isFlagged) {
+                            ms.flagsLeft += 1;
+                            ms.playfield[rowPos][colPos].isFlagged = !ms.playfield[rowPos][colPos].isFlagged;
+                        } else if (!ms.playfield[rowPos][colPos].isFlagged &&
+                                ms.flagsLeft > 0) {
+                            ms.flagsLeft -= 1;
+                            ms.playfield[rowPos][colPos].isFlagged = !ms.playfield[rowPos][colPos].isFlagged;
+                        }
+
+                    }
+
+                    if (ms.unrevealedCount === ms.settings.mines && ms.flagsLeft === 0) {
+                        ms.gameWon();
                     }
 
                     ms.drawPlayfield();
@@ -154,7 +165,7 @@
 
                 setCellToBeRevealed(row, col);
 
-                if (ms.playfield[row][col].neighbourMinesCount == 0) {
+                if (ms.playfield[row][col].neighbourMinesCount === 0) {
                     for (var neighbourRow = row - 1; neighbourRow <= row + 1; neighbourRow++) {
                         for (var neighbourCol = col - 1; neighbourCol <= col + 1; neighbourCol++) {
                             if (row != neighbourRow || col != neighbourCol) {
