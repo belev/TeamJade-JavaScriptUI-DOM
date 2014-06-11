@@ -49,11 +49,11 @@
             ms.isGameOver = false;
             ms.isGameWon = false;
             ms.$timer = $("#timerValue").text("0");
-            ms.unrevealedCount = ms.settings.cols * ms.settings.rows;
             ms.Playfield.isFirstClicked = false;
             ms.settings.rows = $rows > 20 ? 20 : $rows;
             ms.settings.cols = $cols > 20 ? 20 : $cols;
             ms.settings.mines = $mines > $rows * $cols ? $rows * $cols - 2 : $mines;
+            ms.unrevealedCount = ms.settings.cols * ms.settings.rows;
             ms.flagsLeft = ms.settings.mines;
 
             Game.canvas[0].width = ms.settings.cols * ms.sprites.cell.w;
