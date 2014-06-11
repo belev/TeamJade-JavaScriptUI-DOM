@@ -74,7 +74,7 @@ div {
 }
 
 .wrapper {
-    background: url("../img/border.svg") no-repeat top left;
+    background: url("../img/border.svg") #ededed no-repeat top left;
     background-size: contain;
     width: 600px;
     height: 780px;
@@ -110,6 +110,19 @@ div {
 
 input[type="number"] {
     border: 2px solid black;
+}
+
+#timer {
+    width: 150px;
+    margin: 0 auto 3px;
+}
+
+#timer > .value {
+    background-color: #f7f7f7;
+    display: inline-block;
+    min-width: 20px;
+    border: 2px solid black;
+    padding: 2px;
 }
 
 #game {

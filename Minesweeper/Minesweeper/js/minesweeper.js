@@ -139,7 +139,6 @@
             // if clicked on empty cell traverse all neighbour empty cells and open them
             // if clicked on full cell open only the clicked cell
             function clickCell(row, col) {
-
                 // check if the cell we want to reveal is in the play field
                 if (col < 0 || row < 0 ||
                         col >= ms.settings.cols || row >= ms.settings.rows) {
@@ -233,16 +232,16 @@
 
         Playfield : (function () {
             function initializeEmptyPlayfield(width, height) {
-                var cellMatrix = [];
+                var cellMatrix = [],
+                    newCell;
 
                 for (var i = 0; i < width; i++) {
-                    var currentRow = [];
+                    cellMatrix[i] = [];
 
                     for (var j = 0; j < height; j++) {
-                        var cellCoordinates = new Position(i, j);
-                        currentRow.push(new Cell(j * ms.sprites.cell.w, i * ms.sprites.cell.h));
+                        newCell = new Cell(j * ms.sprites.cell.w, i * ms.sprites.cell.h);
+                        cellMatrix[i][j] = newCell;
                     }
-                    cellMatrix.push(currentRow);
                 }
 
                 return cellMatrix;
@@ -263,9 +262,9 @@
             }
 
             // when every mine is placed on random, increases it's neighbours neighbourMinesCount by one
-            function neighbourMinesCountIncreaseForAllNeighbours(cellMatrix, x, y, playfieldWidth, playfieldHeight) {
-                for (var neighbourX = x - 1; neighbourX <= x + 1; neighbourX++) {
-                    for (var neighbourY = y - 1; neighbourY <= y + 1; neighbourY++) {
+            function neighbourMinesCountIncreaseForAllNeighbours(cellMatrix, x, y) {
+                for (var neighbourX = x - 1; neighbourX <= x + 1; neighbourX += 1) {
+                    for (var neighbourY = y - 1; neighbourY <= y + 1; neighbourY += 1) {
                         //neighbour must exist i.e. it must be a valid cell in order to increase it's counter
                         if (neighbourX >= 0 && neighbourY >= 0 &&
                                 neighbourX < ms.settings.cols && neighbourY < ms.settings.rows) {

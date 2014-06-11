@@ -5,6 +5,9 @@
         customSettings = $("#customSettings").hide(),
         saveBtn = $("#saveBtn").hide(),
         selectedColor = 'yellowgreen',
+        eightBtn = $("#eightBtn").css('background', selectedColor),
+        sixteenBtn = $("#sixteenBtn"),
+        customBtn = $("#customBtn"),
         cols = $("#cols"),
         rows = $("#rows"),
         mines = $("#mines");
@@ -23,27 +26,27 @@
 
     // Settings:
 
-    $("#eightBtn").on('click', function () {
+    eightBtn.on('click', function () {
         resetAllOptionsButtons();
 
-        $("#eightBtn").css('background', selectedColor);
+        $(this).css('background', selectedColor);
 
         cols.val("8");
         rows.val("8");
         mines.val("10");
     });
 
-    $("#sixteenBtn").on('click', function () {
+    sixteenBtn.on('click', function () {
         resetAllOptionsButtons();
 
-        $("#sixteenBtn").css('background', selectedColor);
+        $(this).css('background', selectedColor);
 
         cols.val("16");
         rows.val("16");
         mines.val("20");
     });
 
-    $("#customBtn").on('click', function () {
+    customBtn.on('click', function () {
         customBtnToggle();
     });
 
@@ -51,7 +54,7 @@
         customBtnToggle();
         resetAllOptionsButtons();
 
-        $('#customBtn').css('background', selectedColor);
+        customBtn.css('background', selectedColor);
     });
 
     $("#exitBtn").on('click', function () {
@@ -76,15 +79,15 @@
         customSettings.fadeToggle();
         saveBtn.toggle();
 
-        $("#eightBtn").toggle();
-        $("#sixteenBtn").toggle();
+        eightBtn.toggle();
+        sixteenBtn.toggle();
+        customBtn.toggle();
         $("#backBtn").toggle();
-        $("#customBtn").toggle();
     }
 
     function resetAllOptionsButtons() {
-        $("#eightBtn").removeAttr("style");
-        $("#sixteenBtn").removeAttr("style");
-        $("#customBtn").removeAttr("style");
+        eightBtn.removeAttr("style");
+        sixteenBtn.removeAttr("style");
+        customBtn.removeAttr("style");
     }
 }($));
