@@ -89,6 +89,7 @@
         $game.fadeOut("slow", function () {
             $menu.fadeIn();
         });
+        clearInterval(refreshIntervalId);
     });
 
     // Timer handling

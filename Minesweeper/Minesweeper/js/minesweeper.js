@@ -46,7 +46,7 @@
 
             ms.isGameOver = false;
             ms.isGameWon = false;
-            ms.$timer = $("#timerValue");
+            ms.$timer = $("#timerValue").text("0");
             ms.unrevealedCount = ms.settings.cols * ms.settings.rows;
             ms.Playfield.isFirstClicked = false;
             ms.settings.rows = rows > 20 ? 20 : rows;
