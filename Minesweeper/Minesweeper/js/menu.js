@@ -14,24 +14,19 @@
         $mines = $("#mines"),
         $timerValue = $("#timerValue"),
         refreshIntervalId,
-        stopWatch = 0;
+        stopWatch = 0,
+        $scoreboard = $("#scoreboard").hide();
 
     $("#startBtn").on('click', function () {
-        $menu.fadeOut("slow", function () {
-            $game.fadeIn("slow");
-        });
+        fadeOutFadeIn($menu, $game);
     });
 
     $("#settingsBtn").on('click', function () {
-        $menu.fadeOut("slow", function () {
-            $settings.fadeIn("slow");
-        });
+        fadeOutFadeIn($menu, $settings);
     });
 
     $('#helpBtn').on('click', function () {
-        $menu.fadeOut('slow', function () {
-            $help.fadeIn('slow');
-        });
+        fadeOutFadeIn($menu, $help);
     });
 
     // Settings:
@@ -73,33 +68,39 @@
         });
     });
 
-    $("#backBtn").on('click', function () {
-        $settings.fadeOut("slow", function () {
-            $menu.fadeIn();
-        });
+    $("#settingsBackBtn").on('click', function () {
+        fadeOutFadeIn($settings, $menu);
+    });
+
+    $("#scoreboardBtn").on('click', function () {
+        fadeOutFadeIn($menu, $scoreboard);
+    });
+
+    $("#scoreboardBackBtn").on('click', function () {
+        fadeOutFadeIn($scoreboard, $menu);
     });
 
     $("#helpBackBtn").on('click', function () {
-        $help.fadeOut("slow", function () {
-            $menu.fadeIn();
-        });
+        fadeOutFadeIn($help, $menu);
     });
 
     $("#backToMenu").on('click', function () {
-        $game.fadeOut("slow", function () {
-            $menu.fadeIn();
-        });
-
+        fadeOutFadeIn($game, $menu);
         resetTimer();
     });
 
     // Timer handling
 
     $timerValue.on('start', startTimer);
-
     $timerValue.on('stop', resetTimer);
 
     // Help functions
+
+    function fadeOutFadeIn(fadeOutElement, fadeInElement) {
+        fadeOutElement.fadeOut("slow", function () {
+            fadeInElement.fadeIn();
+        });
+    }
 
     function startTimer() {
         refreshIntervalId = setInterval(function () {
@@ -120,7 +121,7 @@
         $eightBtn.toggle();
         $sixteenBtn.toggle();
         $customBtn.toggle();
-        $("#backBtn").toggle();
+        $("#settingsBackBtn").toggle();
     }
 
     function resetAllOptionsButtons() {

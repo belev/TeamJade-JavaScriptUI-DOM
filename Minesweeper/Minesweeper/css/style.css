@@ -118,10 +118,10 @@ input[type="number"] {
     margin: 0 auto 3px;
 }
 
-#timer > .value {
+#timerValue {
     background-color: #f7f7f7;
     display: inline-block;
-    min-width: 20px;
+    min-width: 40px;
     border: 2px solid black;
     padding: 2px;
 }
