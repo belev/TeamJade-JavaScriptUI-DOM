@@ -137,3 +137,11 @@ input[type="number"] {
 #game-help {
     text-align: center;
 }
+
+#game-help > .help-container {
+    line-height: 25px;
+    background-color: #f7f7f7;
+    width: 410px;
+    border: 2px solid black;
+    margin: 0 auto;
+}
