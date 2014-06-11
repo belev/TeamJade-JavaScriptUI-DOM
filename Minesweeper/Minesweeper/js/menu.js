@@ -79,6 +79,7 @@
         $("#eightBtn").toggle();
         $("#sixteenBtn").toggle();
         $("#backBtn").toggle();
+        $("#customBtn").toggle();
     }
 
     function resetAllOptionsButtons() {
