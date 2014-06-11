@@ -10,6 +10,15 @@
 
     <h2>Team JADE</h2>
 
+    <div id="audioControl">
+        <audio autoplay loop id="audio">
+            <!--uncomment to load the audio file-->
+            <!--<source src="audio/audio.wav" type="audio/mpeg">-->
+        </audio>
+
+        <input type="image" id="audioBtn" src="img/audio_on.png" alt=""/>
+    </div>
+
     <div id="game" class="container">
         <div id="timer"><span id="timerValue">0</span> ms</div>
         ​
@@ -56,14 +65,6 @@
         </div>
 
         <button class="ui-button" id="helpBackBtn">Back</button>
-    </div>
-
-    <div id="audioControl">
-        <audio autoplay loop id="audio">
-            <source src="audio/audio.wav" type="audio/mpeg">
-        </audio>
-
-        <input type="image" id="audioBtn" src="img/audio_on.png" alt="" width="20" height="20"/>
     </div>
 
     <span id="forkongithub"><a href="https://github.com/Belev/TeamJade-JavaScriptUI-DOM" target="_blank">Fork me on GitHub</a></span>

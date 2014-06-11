@@ -83,7 +83,7 @@ div {
 }
 
 .container {
-    margin: 50px auto 0;
+    margin: 0 auto;
     padding: 10px;
 }
 
@@ -128,7 +128,6 @@ input[type="number"] {
 
 #game {
     text-align: center;
-    margin: 20px;
 }
 
 #board:hover {
@@ -149,14 +148,15 @@ input[type="number"] {
 }
 
 #audioControl {
-    width: 20px;
+    width: 40px;
     margin: 0 auto;
 }
 
 #audioBtn {
-    position: absolute;
-    top: 600px;
-    left: 49.5%;
+    width: 30px;
+    position: relative;
+    top: -90px;
+    left: -185px;
 }
 
 
@@ -194,7 +194,7 @@ input[type="number"] {
     top:auto;
 }
 
-@media screen and (min-width:800px){
+@media screen and (min-width:400px){
     #forkongithub{
         position:absolute;
         display:block;
