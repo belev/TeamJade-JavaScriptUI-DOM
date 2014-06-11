@@ -11,7 +11,7 @@
     <h2>Team JADE</h2>
 
     <div id="game" class="container">
-        <div id="timer"><span class="value">0</span> ms</div>
+        <div id="timer"><span id="timerValue">0</span> ms</div>
         ​
         <canvas id="board" width="200" height="200"></canvas>
         <button class="ui-button" id="backToMenu">Back To Menu</button>
@@ -32,8 +32,7 @@
         <div class="customSettings" id="customSettings">
             <label for="rows">Rows:</label> <input type="number" name="rows" id="rows" value="8" min="1" max="20"><br/>
             <label for="cols">Cols:</label> <input type="number" name="cols" id="cols" value="8" min="1" max="20"><br/>
-            <label for="mines">Mines:</label> <input type="number" name="mines" id="mines" value="10" min="1"
-                                                     max="398"/>
+            <label for="mines">Mines:</label> <input type="number" name="mines" id="mines" value="10" min="1" max="398"/>
         </div>
 
         <button class="ui-button" id="saveBtn">Save</button>
@@ -59,7 +58,6 @@
 
 <script src="js/lib/jquery.js"></script>
 <script src="js/lib/raphael.js"></script>
-<script src="js/stopwatch.js"></script>
 <script src="js/menu.js"></script>
 <script src="js/engine.js"></script>
 <script src="js/minesweeper.js"></script>

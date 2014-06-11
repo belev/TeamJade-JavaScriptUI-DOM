@@ -20,7 +20,7 @@
             flag: { sx: 220, sy: 0, w: 20, h: 20, frames: 1 }
         },
 
-        stopWatch: null,
+        $timer: $("#timerValue"),
 
         playfield: [],
 
@@ -30,9 +30,12 @@
 
         unrevealedCount: 0,
 
-        setTimer: function () {
-            ms.stopWatch = new StopWatch();
-            ms.stopWatch.start();
+        startTimer: function () {
+            ms.$timer.trigger("start");
+        },
+
+        stopTimer: function () {
+            ms.$timer.trigger("stop");
         },
 
         startGame: function () {
@@ -43,7 +46,7 @@
 
             ms.isGameOver = false;
             ms.isGameWon = false;
-            ms.stopWatch = null;
+            ms.$timer = $("#timerValue");
             ms.unrevealedCount = ms.settings.cols * ms.settings.rows;
             ms.Playfield.isFirstClicked = false;
             ms.settings.rows = rows > 20 ? 20 : rows;
@@ -170,17 +173,17 @@
         },
 
         gameover: function () {
-            ms.stopWatch.stop();
+            ms.stopTimer();
             console.log('you lost');
-            console.log('you have played ' + ms.stopWatch.duration() + 's');
+            console.log('you have played ' + ms.$timer.text() + 'ms');
             ms.isGameOver = true;
             //TODO: Do some animation here
         },
 
         gameWon: function () {
-            ms.stopWatch.stop();
+            ms.stopTimer();
             console.log('you won');
-            console.log('you have played ' + ms.stopWatch.duration() + 's');
+            console.log('you have played ' + ms.$timer.text() + 'ms');
             ms.isGameWon = true;
             //TODO: Do some animation here
         },
@@ -297,7 +300,7 @@
                     possibleMinesCoordinatesMatrix.splice(mineIndex, 1);
                 }
 
-                ms.setTimer();
+                ms.startTimer();
 
                 return playfield;
             }

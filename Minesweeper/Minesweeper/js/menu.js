@@ -11,7 +11,10 @@
         $customBtn = $("#customBtn"),
         $cols = $("#cols"),
         $rows = $("#rows"),
-        $mines = $("#mines");
+        $mines = $("#mines"),
+        $timerValue = $("#timerValue"),
+        refreshIntervalId,
+        stopWatch = 0;
 
     $("#startBtn").on('click', function () {
         $menu.fadeOut("slow", function () {
@@ -87,6 +90,21 @@
             $menu.fadeIn();
         });
     });
+
+    // Timer handling
+
+    $timerValue.on('start', function () {
+       refreshIntervalId = setInterval(function () {
+           $timerValue.text(stopWatch);
+           stopWatch += 1;
+       },1);
+    });
+
+    $timerValue.on('stop', function () {
+        clearInterval(refreshIntervalId);
+    });
+
+    // Help functions
 
     function customBtnToggle() {
         $customSettings.fadeToggle();

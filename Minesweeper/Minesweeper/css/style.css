@@ -97,6 +97,7 @@ div {
     margin: 5px auto 0;
     border: 3px solid black;
     background-color: #f7f7f7;
+    transition:0.5s;
 }
 
 .ui-button:hover {
@@ -141,7 +142,8 @@ input[type="number"] {
 #game-help > .help-container {
     line-height: 25px;
     background-color: #f7f7f7;
-    width: 410px;
+    width: 415px;
+    padding: 10px 0;
     border: 2px solid black;
     margin: 0 auto;
 }
@@ -156,7 +158,8 @@ input[type="number"] {
     padding:5px 40px;
     font-size:1.5rem;
     line-height:2rem;
-    position:relative;transition:0.5s;
+    position:relative;
+    transition:0.5s;
 }
 
 #forkongithub a:hover{
