@@ -10,14 +10,14 @@
         mines = $("#mines");
 
     $("#startBtn").on('click', function () {
-        menu.fadeOut("slow", function () {
-            game.fadeIn("slow");
+        $(menu).fadeOut("slow", function () {
+            $(game).fadeIn("slow");
         });
     });
 
     $("#settingsBtn").on('click', function () {
-        menu.fadeOut("slow", function () {
-            settings.fadeIn("slow");
+        $(menu).fadeOut("slow", function () {
+            $(settings).fadeIn("slow");
         });
     });
 
@@ -28,9 +28,9 @@
 
         $("#eightBtn").css('background', selectedColor);
 
-        cols.val("8");
-        rows.val("8");
-        mines.val("10");
+        $(cols).val("8");
+        $(rows).val("8");
+        $(mines).val("10");
     });
 
     $("#sixteenBtn").on('click', function () {
@@ -38,16 +38,16 @@
 
         $("#sixteenBtn").css('background', selectedColor);
 
-        cols.val("16");
-        rows.val("16");
-        mines.val("20");
+        $(cols).val("16");
+        $(rows).val("16");
+        $(mines).val("20");
     });
 
     $("#customBtn").on('click', function () {
         customBtnToggle();
     });
 
-    saveBtn.on('click', function () {
+    $(saveBtn).on('click', function () {
         customBtnToggle();
         resetAllOptionsButtons();
 
@@ -61,20 +61,20 @@
     });
 
     $("#backBtn").on('click', function () {
-        settings.fadeOut("slow", function () {
-            menu.fadeIn();
+        $(settings).fadeOut("slow", function () {
+            $(menu).fadeIn();
         });
     });
 
     $("#backToMenu").on('click', function () {
-        game.fadeOut("slow", function() {
-            menu.fadeIn();
+        $(game).fadeOut("slow", function () {
+            $(menu).fadeIn();
         });
     });
 
     function customBtnToggle() {
-        customSettings.fadeToggle();
-        saveBtn.toggle();
+        $(customSettings).fadeToggle();
+        $(saveBtn).toggle();
 
         $("#eightBtn").toggle();
         $("#sixteenBtn").toggle();
