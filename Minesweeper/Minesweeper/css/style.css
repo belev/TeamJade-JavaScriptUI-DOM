@@ -148,6 +148,18 @@ input[type="number"] {
     margin: 0 auto;
 }
 
+#audioControl {
+    width: 20px;
+    margin: 0 auto;
+}
+
+#audioBtn {
+    position: absolute;
+    top: 600px;
+    left: 49.5%;
+}
+
+
 /*================ Fork me on GitHub ================*/
 
 #forkongithub a{

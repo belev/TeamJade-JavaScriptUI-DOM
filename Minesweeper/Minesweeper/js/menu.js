@@ -15,7 +15,10 @@
         $timerValue = $("#timerValue"),
         refreshIntervalId,
         stopWatch = 0,
-        $scoreboard = $("#scoreboard").hide();
+        $scoreboard = $("#scoreboard").hide(),
+        $audio = $("#audio"),
+        $audioBtn = $("#audioBtn"),
+        audioPaused = false;
 
     $("#startBtn").on('click', function () {
         fadeOutFadeIn($menu, $game);
@@ -94,7 +97,28 @@
     $timerValue.on('start', startTimer);
     $timerValue.on('stop', resetTimer);
 
+    // Audio control
+
+    $audioBtn.on('click', function () {
+        if (audioPaused) {
+            playAudio ();
+        } else {
+            pauseAudio();
+        }
+    });
+
     // Help functions
+    function pauseAudio () {
+        $audio.trigger("pause");
+        $audioBtn.attr("src", "img/audio_off.png");
+        audioPaused = true;
+    }
+
+    function playAudio () {
+        $audio.trigger("play");
+        $audioBtn.attr("src", "img/audio_on.png");
+        audioPaused = false;
+    }
 
     function fadeOutFadeIn(fadeOutElement, fadeInElement) {
         fadeOutElement.fadeOut("slow", function () {
