@@ -1,41 +1,42 @@
-function StopWatch(){
+function StopWatch() {
 
-    var startTime = null;
-    var stopTime = null;
-    var running = false;
+    this.startTime = null;
+    this.stopTime = null;
+    this.running = false;
+}
 
-    this.start = function(){
+StopWatch.prototype.start = function () {
 
-        if (running == true)
-            return;
-        else if (startTime != null)
-            stopTime = null;
-
-        running = true;
-        startTime = getTime();
-    };
-
-    this.stop = function(){
-
-        if (running == false)
-            return;
-
-        stopTime = getTime();
-        running = false;
-    };
-
-    this.duration = function(){
-        if (startTime == null || stopTime == null)
-            return 'Undefined';
-        else
-            return (stopTime - startTime) / 1000;
-    };
-
-    this.isRunning = function() { return running; }
-
-    function getTime(){
-        var day = new Date();
-        return day.getTime();
+    if (this.running == true) {
+        return;
+    }
+    else if (this.startTime != null) {
+        this.stopTime = null;
     }
 
-}
+    this.running = true;
+    this.startTime = this.getTime();
+};
+
+StopWatch.prototype.stop = function () {
+
+    if (this.running == false) {
+        return;
+    }
+
+    this.stopTime = this.getTime();
+    this.running = false;
+};
+
+StopWatch.prototype.duration = function () {
+    if (this.startTime == null || this.stopTime == null) {
+        return 'Undefined';
+    } else {
+        return (this.stopTime - this.startTime) / 1000;
+    }
+};
+
+StopWatch.prototype.getTime = function getTime() {
+    var day = new Date();
+    return day.getTime();
+};
