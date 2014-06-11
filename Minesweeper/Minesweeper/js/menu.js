@@ -1,6 +1,7 @@
 (function ($) {
     var $menu = $("#menu"),
         $game = $("#game").hide(),
+        $help = $('#game-help').hide(),
         $settings = $("#settings").hide(),
         $customSettings = $("#customSettings").hide(),
         $saveBtn = $("#saveBtn").hide(),
@@ -21,6 +22,12 @@
     $("#settingsBtn").on('click', function () {
         $menu.fadeOut("slow", function () {
             $settings.fadeIn("slow");
+        });
+    });
+
+    $('#helpBtn').on('click', function () {
+        $menu.fadeOut('slow', function () {
+            $help.fadeIn('slow');
         });
     });
 
@@ -65,6 +72,12 @@
 
     $("#backBtn").on('click', function () {
         $settings.fadeOut("slow", function () {
+            $menu.fadeIn();
+        });
+    });
+
+    $("#helpBackBtn").on('click', function () {
+        $help.fadeOut("slow", function () {
             $menu.fadeIn();
         });
     });

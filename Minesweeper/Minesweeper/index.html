@@ -2,47 +2,62 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
     <title>Team Jade - MineSweeper</title>
-    <link rel="stylesheet" type="text/css" href="css/style.css" />
+    <link rel="stylesheet" type="text/css" href="css/style.css"/>
 </head>
 <body>
-    <div class="wrapper">
-        <h1>MineSweeper</h1>
-        <h2>Team JADE</h2>
+<div class="wrapper">
+    <h1>MineSweeper</h1>
 
-        <div id="game" class="container">
-            <div id="timer"><span class="value">0</span> ms</div>​
-            <canvas id="board" width="200" height="200"></canvas>
-            <button class="ui-button" id="backToMenu">Back To Menu</button>
-        </div>
+    <h2>Team JADE</h2>
 
-        <div id="menu" class="container">
-            <button class="ui-button" id="startBtn">New Game</button>
-            <button class="ui-button" id="settingsBtn">Settings</button>
-            <button class="ui-button" id="helpBtn">Help</button>
-            <button class="ui-button" id="exitBtn">Exit</button>
-        </div>
-
-        <div id="settings" class="container">
-            <button class="ui-button" id="eightBtn">8x8 with 10 mines</button>
-            <button class="ui-button" id="sixteenBtn">16x16 with 20 mines</button>
-            <button class="ui-button" id="customBtn">Custom</button>
-
-            <div class="customSettings" id="customSettings">
-                <label for="rows">Rows:</label> <input type="number" name="rows" id="rows" value="8" min="1" max="20"><br/>
-                <label for="cols">Cols:</label> <input type="number" name="cols" id="cols" value="8" min="1" max="20"><br/>
-                <label for="mines">Mines:</label> <input type="number" name="mines" id="mines" value="10" min="1" max="398"/>
-            </div>
-
-            <button class="ui-button" id="saveBtn">Save</button>
-            <button class="ui-button" id="backBtn">Back</button>
-        </div>
+    <div id="game" class="container">
+        <div id="timer"><span class="value">0</span> ms</div>
+        ​
+        <canvas id="board" width="200" height="200"></canvas>
+        <button class="ui-button" id="backToMenu">Back To Menu</button>
     </div>
 
-    <script src="js/lib/jquery.js"></script>
-    <script src="js/lib/raphael.js"></script>
-    <script src="js/stopwatch.js"></script>
-    <script src="js/menu.js"></script>
-    <script src="js/engine.js"></script>
-    <script src="js/minesweeper.js"></script>
+    <div id="menu" class="container">
+        <button class="ui-button" id="startBtn">New Game</button>
+        <button class="ui-button" id="settingsBtn">Settings</button>
+        <button class="ui-button" id="helpBtn">Help</button>
+        <button class="ui-button" id="exitBtn">Exit</button>
+    </div>
+
+    <div id="settings" class="container">
+        <button class="ui-button" id="eightBtn">8x8 with 10 mines</button>
+        <button class="ui-button" id="sixteenBtn">16x16 with 20 mines</button>
+        <button class="ui-button" id="customBtn">Custom</button>
+
+        <div class="customSettings" id="customSettings">
+            <label for="rows">Rows:</label> <input type="number" name="rows" id="rows" value="8" min="1" max="20"><br/>
+            <label for="cols">Cols:</label> <input type="number" name="cols" id="cols" value="8" min="1" max="20"><br/>
+            <label for="mines">Mines:</label> <input type="number" name="mines" id="mines" value="10" min="1"
+                                                     max="398"/>
+        </div>
+
+        <button class="ui-button" id="saveBtn">Save</button>
+        <button class="ui-button" id="backBtn">Back</button>
+    </div>
+
+    <div id="game-help" class="container">
+        <p>This is the classic game minesweeper.</p>
+
+        <p>Controls for playing the game:</p>
+        <br/>
+        <ul id="game-controls">
+            <li>Left click on cell: opens the clicked cell</li>
+            <li>Right click on cell: flag the clicked cell or unflag it if it was flagged</li>
+        </ul>
+        <button class="ui-button" id="helpBackBtn">Back</button>
+    </div>
+</div>
+
+<script src="js/lib/jquery.js"></script>
+<script src="js/lib/raphael.js"></script>
+<script src="js/stopwatch.js"></script>
+<script src="js/menu.js"></script>
+<script src="js/engine.js"></script>
+<script src="js/minesweeper.js"></script>
 </body>
 </html>

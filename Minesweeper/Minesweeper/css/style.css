@@ -133,3 +133,7 @@ input[type="number"] {
 #board:hover {
     cursor: pointer;
 }
+
+#game-help {
+    text-align: center;
+}
