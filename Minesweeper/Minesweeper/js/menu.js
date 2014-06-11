@@ -89,23 +89,29 @@
         $game.fadeOut("slow", function () {
             $menu.fadeIn();
         });
-        clearInterval(refreshIntervalId);
+
+        resetTimer();
     });
 
     // Timer handling
 
-    $timerValue.on('start', function () {
-       refreshIntervalId = setInterval(function () {
-           $timerValue.text(stopWatch);
-           stopWatch += 1;
-       },1);
-    });
+    $timerValue.on('start', startTimer);
 
-    $timerValue.on('stop', function () {
-        clearInterval(refreshIntervalId);
-    });
+    $timerValue.on('stop', resetTimer);
 
     // Help functions
+
+    function startTimer() {
+        refreshIntervalId = setInterval(function () {
+            $timerValue.text(stopWatch);
+            stopWatch += 1;
+        },1);
+    }
+
+    function resetTimer() {
+        clearInterval(refreshIntervalId);
+        stopWatch = 0;
+    }
 
     function customBtnToggle() {
         $customSettings.fadeToggle();
