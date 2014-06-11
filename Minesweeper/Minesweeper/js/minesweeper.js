@@ -132,14 +132,12 @@
 
                     if (!ms.playfield[rowPos][colPos].isRevealed) {
                         if (ms.playfield[rowPos][colPos].isFlagged) {
-                            ms.flagsLeft += 1;
-                            ms.playfield[rowPos][colPos].isFlagged = !ms.playfield[rowPos][colPos].isFlagged;
+                            unflagCell(rowPos, colPos);
+
                         } else if (!ms.playfield[rowPos][colPos].isFlagged &&
                                 ms.flagsLeft > 0) {
-                            ms.flagsLeft -= 1;
-                            ms.playfield[rowPos][colPos].isFlagged = !ms.playfield[rowPos][colPos].isFlagged;
+                            flagCell(rowPos, colPos);
                         }
-
                     }
 
                     if (ms.unrevealedCount === ms.settings.mines && ms.flagsLeft === 0) {
@@ -180,6 +178,21 @@
                 ms.playfield[row][col].isRevealed = true;
                 ms.playfield[row][col].frame = 1;
                 ms.unrevealedCount -= 1;
+
+                // if the cell is flagged, un-flag it
+                if (ms.playfield[row][col].isFlagged) {
+                    unflagCell(row, col);
+                }
+            }
+
+            function flagCell(row, col) {
+                ms.playfield[row][col].isFlagged = true;
+                ms.flagsLeft -= 1;
+            }
+
+            function unflagCell(row, col) {
+                ms.playfield[row][col].isFlagged = false;
+                ms.flagsLeft += 1;
             }
         },
 
