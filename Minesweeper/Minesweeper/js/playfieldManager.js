@@ -1,4 +1,10 @@
 var PlayfieldManager = (function () {
+    var Cell = function (x, y) {
+        this.setup('cell', {x: x, y: y, hasMine: false, neighbourMinesCount: 0, isRevealed: false, isFlagged: false});
+    };
+
+    Cell.prototype = new Sprite();
+
     function initializeEmptyPlayfield(width, height) {
         var cellMatrix = [],
             newCell;
