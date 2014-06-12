@@ -2,7 +2,8 @@ var ms = new function (){
 
     var playfield = [],
         EventHandlerUtils = {},
-        $timer = $("#timerValue");
+        $timer = $("#timerValue"),
+        endScreenAnimationStep;
 
     this.settings = {
         rows: 8,
@@ -48,9 +49,9 @@ var ms = new function (){
         ms.isGameWon = false;
         $timer = $("#timerValue").text("0");
         PlayfieldManager.isFirstClicked = false;
-        ms.settings.rows = $rows > 20 ? 20 : $rows;
-        ms.settings.cols = $cols > 20 ? 20 : $cols;
-        ms.settings.mines = $mines > $rows * $cols ? $rows * $cols - 2 : $mines;
+        ms.settings.rows = setRowColInput($rows);
+        ms.settings.cols = setRowColInput($cols);
+        ms.settings.mines = setMinesInput($mines);
         ms.unrevealedCount = ms.settings.cols * ms.settings.rows;
         ms.flagsLeft = ms.settings.mines;
 
@@ -58,34 +59,153 @@ var ms = new function (){
         Game.canvas[0].height = ms.settings.rows * ms.sprites.cell.h;
 
         playfield = PlayfieldManager.initializeEmpty(ms.settings.rows, ms.settings.cols);
+        endScreenAnimationStep = 0;
 
         eventHandlerSetup();
 
-        setInterval(drawPlayfield, ms.settings.fps);
+        drawPlayfield();
     };
 
     this.gameover = function () {
         ms.stopTimer();
-        console.log('you lost');
-        console.log('you have played ' + $timer.text() + 'ms');
-        ms.isGameOver = true;
 
-        // testing scoreboard
-        //ms.drawPlayfield();
-        //ResultsManager.saveUser();
-        //TODO: Do some animation here
+        setTimeout(gameOverScreen, 800);
+
+        function gameOverScreen() {
+            animateGameScreens("You Lost", "click to continue");
+        }
     };
 
     this.gameWon = function () {
         ms.stopTimer();
-        console.log('you won');
-        console.log('you have played ' + $timer.text() + 'ms');
-        ms.isGameWon = true;
-        //TODO: Do some animation here
+
+        setTimeout(gameWonScreen, 800);
+
+        function gameWonScreen() {
+            animateGameScreens("You Won", "click to continue");
+        }
+
+        // testing scoreboard
+        //ms.drawPlayfield();
+        //ResultsManager.saveUser();
     };
+
+    function eventHandlerSetup() {
+        // first unbind all the previous events (fixing the double right click bug after click the new game button twice)
+        Game.canvas.off("click");
+        Game.canvas.off("contextmenu");
+
+        // then bind the events
+        Game.canvas.on("click", EventHandlerUtils.openCell);
+        Game.canvas.on("contextmenu", EventHandlerUtils.putFlag);
+    }
+
+    function drawPlayfield() {
+        Game.ctx.clearRect(0, 0, Game.canvas[0].width, Game.canvas[0].height);
+
+        var cX = 0,
+            cY = 0;
+
+        for (var i = 0; i < ms.settings.rows; i += 1) {
+            cX = 0;
+            for (var j = 0; j < ms.settings.cols; j += 1) {
+                cX += ms.sprites.cell.w;
+
+                if (playfield[i][j].hasMine && ms.isGameOver && !ms.isGameWon) { // if the game is over, draw all the mines
+                    playfield[i][j].frame = 1;
+                    playfield[i][j].draw(Game.ctx);
+
+                    SpriteSheet.draw(Game.ctx,
+                        'mine',
+                        playfield[i][j].x,
+                        playfield[i][j].y);
+
+                    continue;
+
+                } else {
+                    playfield[i][j].draw(Game.ctx);
+                }
+
+                if (playfield[i][j].isFlagged) {
+                    SpriteSheet.draw(Game.ctx,
+                        'flag',
+                        playfield[i][j].x,
+                        playfield[i][j].y);
+                }
+
+                if (playfield[i][j].isRevealed &&
+                    playfield[i][j].neighbourMinesCount !== 0) {
+                    SpriteSheet.draw(Game.ctx,
+                        playfield[i][j].neighbourMinesCount,
+                        playfield[i][j].x,
+                        playfield[i][j].y);
+                }
+            }
+            cY += ms.sprites.cell.h;
+        }
+
+        if (ms.isGameOver) {
+            ms.gameover();
+        } else if (ms.isGameWon) {
+            ms.gameWon();
+        }
+    }
+
+    function animateGameScreens(title, description) {
+        var steps = 30;
+
+        Game.ctx.fillStyle = "black";
+        Game.ctx.textAlign = "center";
+        Game.ctx.textBaseline = "middle";
+
+        animateTexts();
+
+        function animateTexts() {
+            Game.ctx.clearRect(0, 0, Game.canvas[0].width, Game.canvas[0].height);
+
+            endScreenAnimationStep += 0.1;
+
+            Game.ctx.save();
+            Game.ctx.translate(Game.canvas[0].width / 2, Game.canvas[0].height / 2);
+            Game.ctx.font = "bold " + endScreenAnimationStep + "px bangers";
+            Game.ctx.fillText(title, 0, 0);
+            Game.ctx.font = "bold " + endScreenAnimationStep / 2 + "px bangers";
+            Game.ctx.fillText(description, 0, 30);
+            Game.ctx.restore();
+
+            if (endScreenAnimationStep < steps) {
+                setTimeout(animateTexts, 5);
+            }
+        }
+    }
+
+    function setRowColInput(input) {
+        if (input > 20) {
+            return 20;
+        }
+
+        if (input < 5) {
+            return 5;
+        }
+
+        return input;
+    }
+
+    function setMinesInput(mines) {
+        if (mines < 0) {
+            return 1;
+        }
+
+        if (mines > ms.settings.rows * ms.settings.cols) {
+            return ms.settings.rows * ms.settings.cols - 2;
+        }
+
+        return mines;
+    }
 
     // Building event handling utils
     EventHandlerUtils = (function () {
+
         function openCell(e) {
             if (ms.isGameOver || ms.isGameWon) {
                 return;
@@ -112,12 +232,13 @@ var ms = new function (){
 
                 if (!playfield[rowPos][colPos].isFlagged &&
                     playfield[rowPos][colPos].hasMine) {
-                    ms.gameover();
-
+                    ms.isGameOver = true;
                 } else if (!playfield[rowPos][colPos].isFlagged) {
                     // click on the cell, if the cell is empty, open all the empty cells around it
                     clickCell(rowPos, colPos);
                 }
+
+                drawPlayfield();
             }
         }
 
@@ -151,8 +272,11 @@ var ms = new function (){
                 }
 
                 if (ms.unrevealedCount === ms.settings.mines && ms.flagsLeft === 0) {
-                    ms.gameWon();
+                    ms.isGameWon = true;
                 }
+
+                console.log(ms.isGameWon);
+                drawPlayfield();
             }
         }
 
@@ -208,61 +332,6 @@ var ms = new function (){
             putFlag: putFlag
         }
     }());
-
-    function eventHandlerSetup() {
-        // first unbind all the previous events (fixing the double right click bug after click the new game button twice)
-        Game.canvas.off("click");
-        Game.canvas.off("contextmenu");
-
-        // then bind the events
-        Game.canvas.on("click", EventHandlerUtils.openCell);
-        Game.canvas.on("contextmenu", EventHandlerUtils.putFlag);
-    }
-
-    function drawPlayfield() {
-        Game.ctx.clearRect(0, 0, Game.canvas[0].width, Game.canvas[0].height);
-
-        var cX = 0,
-            cY = 0;
-
-        for (var i = 0; i < ms.settings.rows; i += 1) {
-            cX = 0;
-            for (var j = 0; j < ms.settings.cols; j += 1) {
-                cX += ms.sprites.cell.w;
-
-                if (playfield[i][j].hasMine && ms.isGameOver && !ms.isGameWon) { // if the game is over, draw all the mines
-                    playfield[i][j].frame = 1;
-                    playfield[i][j].draw(Game.ctx);
-
-                    SpriteSheet.draw(Game.ctx,
-                        'mine',
-                        playfield[i][j].x,
-                        playfield[i][j].y);
-
-                    continue;
-
-                } else {
-                    playfield[i][j].draw(Game.ctx);
-                }
-
-                if (playfield[i][j].isFlagged) {
-                    SpriteSheet.draw(Game.ctx,
-                        'flag',
-                        playfield[i][j].x,
-                        playfield[i][j].y);
-                }
-
-                if (playfield[i][j].isRevealed &&
-                    playfield[i][j].neighbourMinesCount !== 0) {
-                    SpriteSheet.draw(Game.ctx,
-                        playfield[i][j].neighbourMinesCount,
-                        playfield[i][j].x,
-                        playfield[i][j].y);
-                }
-            }
-            cY += ms.sprites.cell.h;
-        }
-    }
 };
 
 $("#startBtn").on("click", function () {
