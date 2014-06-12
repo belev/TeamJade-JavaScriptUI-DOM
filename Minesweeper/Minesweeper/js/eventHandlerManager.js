@@ -15,12 +15,12 @@ var EventHandlerManager = (function () {
         if (colPos >= 0 && colPos < ms.settings.cols &&
             rowPos >= 0 && rowPos < ms.settings.rows) {
 
-            if (!Playfield.isFirstClicked) {
-                ms.playfield = Playfield.initialize(ms.settings.rows,
+            if (!PlayfieldManager.isFirstClicked) {
+                ms.playfield = PlayfieldManager.initialize(ms.settings.rows,
                     ms.settings.cols,
                     ms.settings.mines,
                     rowPos, colPos);
-                Playfield.isFirstClicked = true;
+                PlayfieldManager.isFirstClicked = true;
             }
 
             if (!ms.playfield[rowPos][colPos].isFlagged &&

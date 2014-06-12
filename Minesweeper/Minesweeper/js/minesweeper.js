@@ -49,7 +49,7 @@ var ms = {
         ms.isGameOver = false;
         ms.isGameWon = false;
         ms.$timer = $("#timerValue").text("0");
-        Playfield.isFirstClicked = false;
+        PlayfieldManager.isFirstClicked = false;
         ms.settings.rows = $rows > 20 ? 20 : $rows;
         ms.settings.cols = $cols > 20 ? 20 : $cols;
         ms.settings.mines = $mines > $rows * $cols ? $rows * $cols - 2 : $mines;
@@ -59,7 +59,7 @@ var ms = {
         Game.canvas[0].width = ms.settings.cols * ms.sprites.cell.w;
         Game.canvas[0].height = ms.settings.rows * ms.sprites.cell.h;
 
-        ms.playfield = Playfield.initializeEmpty(ms.settings.rows, ms.settings.cols);
+        ms.playfield = PlayfieldManager.initializeEmpty(ms.settings.rows, ms.settings.cols);
 
         ms.drawPlayfield();
         ms.eventHandlerSetup();
@@ -166,7 +166,7 @@ startBtn.on("click", function () {
 //var playfieldWidth = 10;
 //var playfieldHeight = 10;
 //
-//var playfield = Playfield.initialize(10, 10, 20, 0, 0);
+//var playfield = PlayfieldManager.initialize(10, 10, 20, 0, 0);
 //consolePrintPlayfield(playfield, playfieldWidth, playfieldHeight);
 //
 //function consolePrintPlayfield(matrix, width, height) {

@@ -1,4 +1,4 @@
-var Playfield = (function () {
+var PlayfieldManager = (function () {
     function initializeEmptyPlayfield(width, height) {
         var cellMatrix = [],
             newCell;
