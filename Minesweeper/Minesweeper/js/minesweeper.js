@@ -280,6 +280,28 @@ var ms = new function (){
             }
         }
 
+
+        function animateCellOpening(movementVector, currentPosition) {
+
+            //working with canvas coordinates:
+
+            if (currentPosition.y > Game.canvas[0].height) {
+                return;
+
+            }
+            //redraw the field
+            drawPlayfield()
+
+            //draw a cell on currentPosition.x and currentPosition.y
+            SpriteSheet.draw(Game.ctx, 'cell', currentPosition.x, currentPosition.y);
+
+            currentPosition.x += movementVector.x;
+            currentPosition.y += movementVector.y;
+            movementVector.y++;
+
+            requestAnimationFrame(function () { animateCellOpening(movementVector, currentPosition) });
+        }
+
         // if clicked on empty cell traverse all neighbour empty cells and open them
         // if clicked on full cell open only the clicked cell
         function clickCell(row, col) {
@@ -294,6 +316,10 @@ var ms = new function (){
             }
 
             setCellToBeRevealed(row, col);
+
+            var movementVector= {x:Math.random()*10 - 5, y: -Math.abs(Math.random()*15)}
+            var currentPosition = {x:100, y:100}
+            animateCellOpening(movementVector, currentPosition);
 
             if (playfield[row][col].neighbourMinesCount === 0) {
                 for (var neighbourRow = row - 1; neighbourRow <= row + 1; neighbourRow++) {
