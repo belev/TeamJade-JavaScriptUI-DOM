@@ -137,7 +137,7 @@ var ms = new function (){
     }
 
     function animateGameScreens(title, description) {
-        var steps = 30;
+        var endScreenAnimationStep = 0, steps = 30;
 
         Game.ctx.fillStyle = "black";
         Game.ctx.textAlign = "center";
@@ -148,7 +148,7 @@ var ms = new function (){
         function animateTexts() {
             Game.ctx.clearRect(0, 0, Game.canvas[0].width, Game.canvas[0].height);
 
-            endScreenAnimationStep += 0.1;
+            endScreenAnimationStep += 1;
 
             Game.ctx.save();
             Game.ctx.translate(Game.canvas[0].width / 2, Game.canvas[0].height / 2);
@@ -159,7 +159,7 @@ var ms = new function (){
             Game.ctx.restore();
 
             if (endScreenAnimationStep < steps) {
-                setTimeout(animateTexts, 1);
+                requestAnimationFrame(animateTexts, null);
             }
         }
     }
@@ -198,7 +198,7 @@ var ms = new function (){
         Game.canvas.on("contextmenu", EventHandlerUtils.putFlag);
     }
 
-    // Building event handling utils
+    // Building event handling utilities
     EventHandlerUtils = (function () {
 
         function addToScoreBoard() {
@@ -285,7 +285,6 @@ var ms = new function (){
             }
         }
 
-
         function animateCellOpening(movementVector, currentPosition) {
 
             //working with canvas coordinates:
@@ -295,7 +294,7 @@ var ms = new function (){
             }
 
             //redraw the field
-            drawPlayfield()
+            drawPlayfield();
 
             //draw a cell on currentPosition.x and currentPosition.y
             SpriteSheet.draw(Game.ctx, 'cell', currentPosition.x, currentPosition.y);
@@ -306,7 +305,7 @@ var ms = new function (){
 
             requestAnimationFrame(function () {
                 animateCellOpening(movementVector, currentPosition);
-            });
+            }, null);
         }
 
         // if clicked on empty cell traverse all neighbour empty cells and open them
