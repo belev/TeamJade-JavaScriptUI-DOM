@@ -79,6 +79,10 @@ var ms = {
         console.log('you lost');
         console.log('you have played ' + ms.$timer.text() + 'ms');
         ms.isGameOver = true;
+
+        // testing scoreboard
+        //ms.drawPlayfield();
+        //ResultsManager.saveUser();
         //TODO: Do some animation here
     },
 
