@@ -76,6 +76,7 @@
     });
 
     $("#scoreboardBtn").on('click', function () {
+        ResultsManager.updateScoreboard();
         fadeOutFadeIn($menu, $scoreboard);
     });
 
@@ -128,9 +129,9 @@
 
     function startTimer() {
         refreshIntervalId = setInterval(function () {
-            $timerValue.text(stopWatch);
-            stopWatch += 1;
-        },1);
+            $timerValue.text(stopWatch.toFixed(2));
+            stopWatch += parseFloat(1 / 100);
+        },10);
     }
 
     function resetTimer() {
