@@ -242,7 +242,7 @@ var ms = new function (){
                     ms.isGameOver = true;
                 } else if (!playfield[rowPos][colPos].isFlagged) {
                     // click on the cell, if the cell is empty, open all the empty cells around it
-                    clickCell(rowPos, colPos);
+                    clickCell(rowPos, colPos, true);
                 }
 
                 drawPlayfield();
@@ -291,10 +291,10 @@ var ms = new function (){
 
             //working with canvas coordinates:
 
-            if (currentPosition.y > Game.canvas[0].height) {
+            if (currentPosition.y > Game.canvas[0].height+ms.sprites.cell.h) {
                 return;
-
             }
+
             //redraw the field
             drawPlayfield()
 
@@ -310,7 +310,7 @@ var ms = new function (){
 
         // if clicked on empty cell traverse all neighbour empty cells and open them
         // if clicked on full cell open only the clicked cell
-        function clickCell(row, col) {
+        function clickCell(row, col, isAnimated) {
             // check if the cell we want to reveal is in the playfield
             if (col < 0 || row < 0 ||
                 col >= ms.settings.cols || row >= ms.settings.rows) {
@@ -322,16 +322,17 @@ var ms = new function (){
             }
 
             setCellToBeRevealed(row, col);
-
-            var movementVector= {x:Math.random()*10 - 5, y: -Math.abs(Math.random()*15)}
-            var currentPosition = {x:100, y:100}
-            animateCellOpening(movementVector, currentPosition);
+            if (isAnimated) {
+                var movementVector = { x: Math.random() * 10 - 5, y: -Math.abs(Math.random() * 15) }
+                var currentPosition = { x: col * ms.sprites.cell.w, y: row * ms.sprites.cell.h }
+                animateCellOpening(movementVector, currentPosition);
+            }
 
             if (playfield[row][col].neighbourMinesCount === 0) {
                 for (var neighbourRow = row - 1; neighbourRow <= row + 1; neighbourRow++) {
                     for (var neighbourCol = col - 1; neighbourCol <= col + 1; neighbourCol++) {
                         if (row != neighbourRow || col != neighbourCol) {
-                            clickCell(neighbourRow, neighbourCol);
+                            clickCell(neighbourRow, neighbourCol, false);
                         }
                     }
                 }
@@ -342,6 +343,10 @@ var ms = new function (){
             playfield[row][col].isRevealed = true;
             playfield[row][col].frame = 1;
             ms.unrevealedCount -= 1;
+
+            //var movementVector = { x: Math.random() * 10 - 5, y: -Math.abs(Math.random() * 15) }
+            //var currentPosition = { x: col * ms.sprites.cell.w, y: row * ms.sprites.cell.h }
+            //animateCellOpening(movementVector, currentPosition);
 
             // if the cell is flagged, un-flag it
             if (playfield[row][col].isFlagged) {
