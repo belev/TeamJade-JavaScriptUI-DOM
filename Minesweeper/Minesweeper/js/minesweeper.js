@@ -137,16 +137,10 @@ var ms = {
     }
 };
 
-var Cell = function (x, y) {
-    this.setup('cell', {x: x, y: y, hasMine: false, neighbourMinesCount: 0, isRevealed: false, isFlagged: false});
-};
-
-Cell.prototype = new Sprite();
-
 // start game button
-var startBtn = $("#startBtn");
+//var startBtn = $("#startBtn");
 
-startBtn.on("click", function () {
+$("#startBtn").on("click", function () {
     Game.initialize("board", ms.sprites, ms.startGame);
 });
 //}($));
