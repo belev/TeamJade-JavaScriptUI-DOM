@@ -5,11 +5,15 @@ var ms = new function (){
         $timer = $("#timerValue"),
         endScreenAnimationStep;
 
+    this.isGameOver = false;
+    this.isGameWon = false;
+    this.unrevealedCount = 0;
+    this.flagsLeft = 0;
+
     this.settings = {
         rows: 8,
         cols: 8,
-        mines: 20,
-        fps: 1000 / 60
+        mines: 20
     };
 
     this.sprites = {
@@ -26,11 +30,6 @@ var ms = new function (){
         flag: { sx: 220, sy: 0, w: 20, h: 20, frames: 1 }
     };
 
-    this.isGameOver = false;
-    this.isGameWon = false;
-    this.unrevealedCount = 0;
-    this.flagsLeft = 0;
-
     this.startTimer = function () {
         $timer.trigger("start");
     };
@@ -45,10 +44,10 @@ var ms = new function (){
             $cols = parseInt($("#cols").val()) || 8,
             $mines = parseInt($("#mines").val()) || 10;
 
-        ms.isGameOver = false;
-        ms.isGameWon = false;
         $timer = $("#timerValue").text("0");
         PlayfieldManager.isFirstClicked = false;
+        ms.isGameOver = false;
+        ms.isGameWon = false;
         ms.settings.rows = setRowColInput($rows);
         ms.settings.cols = setRowColInput($cols);
         ms.settings.mines = setMinesInput($mines);
@@ -84,21 +83,7 @@ var ms = new function (){
         function gameWonScreen() {
             animateGameScreens("You Won", "click to continue");
         }
-
-        // testing scoreboard
-        //ms.drawPlayfield();
-        //ResultsManager.saveUser();
     };
-
-    function eventHandlerSetup() {
-        // first unbind all the previous events (fixing the double right click bug after click the new game button twice)
-        Game.canvas.off("click");
-        Game.canvas.off("contextmenu");
-
-        // then bind the events
-        Game.canvas.on("click", EventHandlerUtils.openCell);
-        Game.canvas.on("contextmenu", EventHandlerUtils.putFlag);
-    }
 
     function drawPlayfield() {
         Game.ctx.clearRect(0, 0, Game.canvas[0].width, Game.canvas[0].height);
@@ -130,7 +115,7 @@ var ms = new function (){
                     SpriteSheet.draw(Game.ctx,
                         'flag',
                         playfield[i][j].x,
-                        playfield[i][j].y);
+                        playfield[i][j].y); // draw flag
                 }
 
                 if (playfield[i][j].isRevealed &&
@@ -138,7 +123,7 @@ var ms = new function (){
                     SpriteSheet.draw(Game.ctx,
                         playfield[i][j].neighbourMinesCount,
                         playfield[i][j].x,
-                        playfield[i][j].y);
+                        playfield[i][j].y); // draw number of neighbour mines
                 }
             }
             cY += ms.sprites.cell.h;
@@ -174,7 +159,7 @@ var ms = new function (){
             Game.ctx.restore();
 
             if (endScreenAnimationStep < steps) {
-                setTimeout(animateTexts, 5);
+                setTimeout(animateTexts, 1);
             }
         }
     }
@@ -203,11 +188,33 @@ var ms = new function (){
         return mines;
     }
 
+    function eventHandlerSetup() {
+        // first unbind all the previous events (fixing the double right click bug after click the new game button twice)
+        Game.canvas.off("click");
+        Game.canvas.off("contextmenu");
+
+        // then bind the events
+        Game.canvas.on("click", EventHandlerUtils.openCell);
+        Game.canvas.on("contextmenu", EventHandlerUtils.putFlag);
+    }
+
     // Building event handling utils
     EventHandlerUtils = (function () {
 
+        function addToScoreBoard() {
+            // testing scoreboard
+            drawPlayfield();
+            ResultsManager.saveUser();
+        }
+
         function openCell(e) {
-            if (ms.isGameOver || ms.isGameWon) {
+            if (ms.isGameOver) {
+                return;
+            }
+
+            if (ms.isGameWon) {
+                addToScoreBoard();
+
                 return;
             }
 
@@ -275,7 +282,6 @@ var ms = new function (){
                     ms.isGameWon = true;
                 }
 
-                console.log(ms.isGameWon);
                 drawPlayfield();
             }
         }
