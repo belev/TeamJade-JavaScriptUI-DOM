@@ -35,7 +35,6 @@ var PlayfieldManager = (function () {
         return possibleMinesCoordinates;
     }
 
-    // when every mine is placed on random, increases it's neighbours neighbourMinesCount by one
     function neighbourMinesCountIncreaseForAllNeighbours(cellMatrix, x, y) {
         for (var neighbourX = x - 1; neighbourX <= x + 1; neighbourX += 1) {
             for (var neighbourY = y - 1; neighbourY <= y + 1; neighbourY += 1) {
@@ -53,7 +52,6 @@ var PlayfieldManager = (function () {
     function initializePlayfield(playfieldWidth, playfieldHeight, numberOfMines, selectedX, selectedY) {
         var playfield = initializeEmptyPlayfield(playfieldWidth, playfieldHeight);
 
-        // get all possible coordinates for mines after the first click on the playfield
         var possibleMinesCoordinatesMatrix = getPossibleMinesPositions(playfieldWidth, playfieldHeight, selectedX, selectedY);
 
         // place all mines on the playfield

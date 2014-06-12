@@ -1,4 +1,3 @@
-//(function ($) {
 var ms = {
     settings: {
         rows: 8,
@@ -137,55 +136,6 @@ var ms = {
     }
 };
 
-// start game button
-//var startBtn = $("#startBtn");
-
 $("#startBtn").on("click", function () {
     Game.initialize("board", ms.sprites, ms.startGame);
 });
-//}($));
-
-
-//var matrix = [];
-//var width;
-//var height;
-//var gameState = '';
-//
-//
-//
-//
-//var matrix = generateCellMatrix(3, 4);
-//var matrix2 = generatePossibleMinesMatrix(3, 4, 2, 2);
-//var matrix3 = generateMineMatrix(10, 10, 15, 2, 2);
-//var playfieldWidth = 10;
-//var playfieldHeight = 10;
-//
-//var playfield = PlayfieldManager.initialize(10, 10, 20, 0, 0);
-//consolePrintPlayfield(playfield, playfieldWidth, playfieldHeight);
-//
-//function consolePrintPlayfield(matrix, width, height) {
-//
-//    for (var i = 0; i < width; i++) {
-//        var line = '';
-//        for (var j = 0; j < height; j++) {
-//            if (matrix[i][j].hasMine) {
-//                line += 'X';
-//            }
-//            else {
-//                line += matrix[i][j].neighbourMinesCount;
-//            }
-//
-//            if (matrix[i][j].isRevealed) {
-//                line += 'r';
-//            }
-//            else {
-//                line += '?';
-//            }
-//            line += ' ';
-//        }
-//
-//        console.log(line);
-//    }
-//}
-
-//consolePrintPlayfield(matrix3, 10, 10);

@@ -73,10 +73,10 @@ var EventHandlerManager = (function () {
         }
     }
 
-// if clicked on empty cell traverse all neighbour empty cells and open them
-// if clicked on full cell open only the clicked cell
+    // if clicked on empty cell traverse all neighbour empty cells and open them
+    // if clicked on full cell open only the clicked cell
     function clickCell(row, col) {
-        // check if the cell we want to reveal is in the play field
+        // check if the cell we want to reveal is in the playfield
         if (col < 0 || row < 0 ||
             col >= ms.settings.cols || row >= ms.settings.rows) {
             return;
