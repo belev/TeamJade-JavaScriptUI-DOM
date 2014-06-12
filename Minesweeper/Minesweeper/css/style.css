@@ -159,6 +159,10 @@ input[type="number"] {
     left: -185px;
 }
 
+#results-list {
+    text-align: center;
+    font-size: 20px;
+}
 
 /*================ Fork me on GitHub ================*/
 
