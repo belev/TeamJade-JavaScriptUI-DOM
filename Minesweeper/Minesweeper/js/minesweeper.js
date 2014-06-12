@@ -1,9 +1,8 @@
 var ms = new function (){
 
-    var playfield = [],
+    var playField = [],
         EventHandlerUtils = {},
-        $timer = $("#timerValue"),
-        endScreenAnimationStep;
+        $timer = $("#timerValue");
 
     this.isGameOver = false;
     this.isGameWon = false;
@@ -57,35 +56,30 @@ var ms = new function (){
         Game.canvas[0].width = ms.settings.cols * ms.sprites.cell.w;
         Game.canvas[0].height = ms.settings.rows * ms.sprites.cell.h;
 
-        playfield = PlayfieldManager.initializeEmpty(ms.settings.rows, ms.settings.cols);
-        endScreenAnimationStep = 0;
+        playField = PlayfieldManager.initializeEmpty(ms.settings.rows, ms.settings.cols);
 
         eventHandlerSetup();
 
-        drawPlayfield();
+        drawPlayField();
     };
 
-    this.gameover = function () {
+    this.gameOver = function () {
         ms.stopTimer();
 
-        setTimeout(gameOverScreen, 800);
-
-        function gameOverScreen() {
-            animateGameScreens("You Lost", "click to continue");
-        }
+        setTimeout(function () {
+            showGameEndScreen("You Lost", "click here to try again");
+        }, 800);
     };
 
     this.gameWon = function () {
         ms.stopTimer();
 
-        setTimeout(gameWonScreen, 800);
-
-        function gameWonScreen() {
-            animateGameScreens("You Won", "click to continue");
-        }
+        setTimeout(function () {
+            showGameEndScreen("You Won", "click here to submit your score");
+        }, 800);
     };
 
-    function drawPlayfield() {
+    function drawPlayField() {
         Game.ctx.clearRect(0, 0, Game.canvas[0].width, Game.canvas[0].height);
 
         var cX = 0,
@@ -96,56 +90,59 @@ var ms = new function (){
             for (var j = 0; j < ms.settings.cols; j += 1) {
                 cX += ms.sprites.cell.w;
 
-                if (playfield[i][j].hasMine && ms.isGameOver && !ms.isGameWon) { // if the game is over, draw all the mines
-                    playfield[i][j].frame = 1;
-                    playfield[i][j].draw(Game.ctx);
+                // if the game is over, draw all the mines
+                if (playField[i][j].hasMine && ms.isGameOver && !ms.isGameWon) {
+                    playField[i][j].frame = 1;
+                    playField[i][j].draw(Game.ctx);
 
                     SpriteSheet.draw(Game.ctx,
                         'mine',
-                        playfield[i][j].x,
-                        playfield[i][j].y);
+                        playField[i][j].x,
+                        playField[i][j].y);
 
                     continue;
 
                 } else {
-                    playfield[i][j].draw(Game.ctx);
+                    playField[i][j].draw(Game.ctx);
                 }
 
-                if (playfield[i][j].isFlagged) {
+                if (playField[i][j].isFlagged) {
+                    // draw flag
                     SpriteSheet.draw(Game.ctx,
                         'flag',
-                        playfield[i][j].x,
-                        playfield[i][j].y); // draw flag
+                        playField[i][j].x,
+                        playField[i][j].y);
                 }
 
-                if (playfield[i][j].isRevealed &&
-                    playfield[i][j].neighbourMinesCount !== 0) {
+                if (playField[i][j].isRevealed &&
+                        playField[i][j].neighbourMinesCount !== 0) {
+                    // draw number of neighbour mines
                     SpriteSheet.draw(Game.ctx,
-                        playfield[i][j].neighbourMinesCount,
-                        playfield[i][j].x,
-                        playfield[i][j].y); // draw number of neighbour mines
+                        playField[i][j].neighbourMinesCount,
+                        playField[i][j].x,
+                        playField[i][j].y);
                 }
             }
             cY += ms.sprites.cell.h;
         }
 
         if (ms.isGameOver) {
-            ms.gameover();
+            ms.gameOver();
         } else if (ms.isGameWon) {
             ms.gameWon();
         }
     }
 
-    function animateGameScreens(title, description) {
+    function showGameEndScreen(title, description) {
         var endScreenAnimationStep = 0, steps = 30;
 
         Game.ctx.fillStyle = "black";
         Game.ctx.textAlign = "center";
         Game.ctx.textBaseline = "middle";
 
-        animateTexts();
+        smallTextToBigText();
 
-        function animateTexts() {
+        function smallTextToBigText() {
             Game.ctx.clearRect(0, 0, Game.canvas[0].width, Game.canvas[0].height);
 
             endScreenAnimationStep += 1;
@@ -159,7 +156,7 @@ var ms = new function (){
             Game.ctx.restore();
 
             if (endScreenAnimationStep < steps) {
-                requestAnimationFrame(animateTexts, null);
+                requestAnimationFrame(smallTextToBigText, null);
             }
         }
     }
@@ -202,17 +199,19 @@ var ms = new function (){
     EventHandlerUtils = (function () {
 
         function addToScoreBoard() {
-            // testing scoreboard
-            drawPlayfield();
             ResultsManager.saveUser();
         }
 
         function openCell(e) {
             if (ms.isGameOver) {
+                // click to restart the game
+                ms.startGame();
+
                 return;
             }
 
             if (ms.isGameWon) {
+                // click to enter your game to scoreboard
                 addToScoreBoard();
 
                 return;
@@ -230,17 +229,17 @@ var ms = new function (){
                 rowPos >= 0 && rowPos < ms.settings.rows) {
 
                 if (!PlayfieldManager.isFirstClicked) {
-                    playfield = PlayfieldManager.initialize(ms.settings.rows,
+                    playField = PlayfieldManager.initialize(ms.settings.rows,
                         ms.settings.cols,
                         ms.settings.mines,
                         rowPos, colPos);
                     PlayfieldManager.isFirstClicked = true;
                 }
 
-                if (!playfield[rowPos][colPos].isFlagged &&
-                    playfield[rowPos][colPos].hasMine) {
+                if (!playField[rowPos][colPos].isFlagged &&
+                    playField[rowPos][colPos].hasMine) {
                     ms.isGameOver = true;
-                } else if (!playfield[rowPos][colPos].isFlagged) {
+                } else if (!playField[rowPos][colPos].isFlagged) {
                     // click on the cell, if the cell is empty, open all the empty cells around it
                     clickCell(rowPos, colPos, true);
                 }
@@ -249,7 +248,7 @@ var ms = new function (){
                     ms.isGameWon = true;
                 }
 
-                drawPlayfield();
+                drawPlayField();
             }
         }
 
@@ -272,29 +271,28 @@ var ms = new function (){
                 colPos = Math.floor(x / ms.sprites.cell.w);
                 rowPos = Math.floor(y / ms.sprites.cell.h);
 
-                if (!playfield[rowPos][colPos].isRevealed) {
-                    if (playfield[rowPos][colPos].isFlagged) {
+                if (!playField[rowPos][colPos].isRevealed) {
+                    if (playField[rowPos][colPos].isFlagged) {
                         unflagCell(rowPos, colPos);
 
-                    } else if (!playfield[rowPos][colPos].isFlagged && ms.flagsLeft > 0) {
+                    } else if (!playField[rowPos][colPos].isFlagged && ms.flagsLeft > 0) {
                         flagCell(rowPos, colPos);
                     }
                 }
 
-                drawPlayfield();
+                drawPlayField();
             }
         }
 
         function animateCellOpening(movementVector, currentPosition) {
-
-            //working with canvas coordinates:
+            // working with canvas coordinates:
 
             if (currentPosition.y > Game.canvas[0].height+ms.sprites.cell.h) {
                 return;
             }
 
             //redraw the field
-            drawPlayfield();
+            drawPlayField();
 
             //draw a cell on currentPosition.x and currentPosition.y
             SpriteSheet.draw(Game.ctx, 'cell', currentPosition.x, currentPosition.y);
@@ -317,18 +315,26 @@ var ms = new function (){
                 return;
             }
 
-            if (playfield[row][col].isRevealed) {
+            if (playField[row][col].isRevealed) {
                 return;
             }
 
             setCellToBeRevealed(row, col);
+
             if (isAnimated) {
-                var movementVector = { x: Math.random() * 10 - 5, y: -Math.abs(Math.random() * 15) }
-                var currentPosition = { x: col * ms.sprites.cell.w, y: row * ms.sprites.cell.h }
+                var movementVector = {
+                        x: Math.random() * 10 - 5,
+                        y: -Math.abs(Math.random() * 15)
+                    },
+                    currentPosition = {
+                        x: col * ms.sprites.cell.w,
+                        y: row * ms.sprites.cell.h
+                    };
+
                 animateCellOpening(movementVector, currentPosition);
             }
 
-            if (playfield[row][col].neighbourMinesCount === 0) {
+            if (playField[row][col].neighbourMinesCount === 0) {
                 for (var neighbourRow = row - 1; neighbourRow <= row + 1; neighbourRow++) {
                     for (var neighbourCol = col - 1; neighbourCol <= col + 1; neighbourCol++) {
                         if (row != neighbourRow || col != neighbourCol) {
@@ -340,27 +346,23 @@ var ms = new function (){
         }
 
         function setCellToBeRevealed(row, col) {
-            playfield[row][col].isRevealed = true;
-            playfield[row][col].frame = 1;
+            playField[row][col].isRevealed = true;
+            playField[row][col].frame = 1;
             ms.unrevealedCount -= 1;
 
-            //var movementVector = { x: Math.random() * 10 - 5, y: -Math.abs(Math.random() * 15) }
-            //var currentPosition = { x: col * ms.sprites.cell.w, y: row * ms.sprites.cell.h }
-            //animateCellOpening(movementVector, currentPosition);
-
             // if the cell is flagged, un-flag it
-            if (playfield[row][col].isFlagged) {
+            if (playField[row][col].isFlagged) {
                 unflagCell(row, col);
             }
         }
 
         function flagCell(row, col) {
-            playfield[row][col].isFlagged = true;
+            playField[row][col].isFlagged = true;
             ms.flagsLeft -= 1;
         }
 
         function unflagCell(row, col) {
-            playfield[row][col].isFlagged = false;
+            playField[row][col].isFlagged = false;
             ms.flagsLeft += 1;
         }
 

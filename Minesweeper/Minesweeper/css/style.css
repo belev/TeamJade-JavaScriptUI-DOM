@@ -141,7 +141,7 @@ input[type="number"] {
 #game-help > .help-container {
     line-height: 25px;
     background-color: #f7f7f7;
-    width: 415px;
+    width: 400px;
     padding: 10px 0;
     border: 2px solid black;
     margin: 0 auto;
@@ -161,7 +161,12 @@ input[type="number"] {
 
 #results-list {
     text-align: center;
-    font-size: 20px;
+    line-height: 25px;
+    background-color: #f7f7f7;
+    width: 400px;
+    padding: 10px 0;
+    border: 2px solid black;
+    margin: 0 auto;
 }
 
 /*================ Fork me on GitHub ================*/

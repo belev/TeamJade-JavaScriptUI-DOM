@@ -7,7 +7,11 @@ var ResultsManager = (function () {
         var userName = prompt('Enter your name: ');
         var userPlaytimeInSeconds = $('#timerValue').html();
 
-        localStorage[userName] = userPlaytimeInSeconds;
+        if (userName) {
+            localStorage[userName] = userPlaytimeInSeconds;
+        }
+
+        ms.startGame();
     }
 
     function getSortedResults() {
