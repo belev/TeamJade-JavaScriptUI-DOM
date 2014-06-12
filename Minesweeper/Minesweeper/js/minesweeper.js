@@ -67,7 +67,7 @@ var ms = new function (){
         ms.stopTimer();
 
         setTimeout(function () {
-            showGameEndScreen("You Lost", "click here to try again");
+            showGameEndScreen("You Lost", "click to try again");
         }, 800);
     };
 
@@ -75,7 +75,7 @@ var ms = new function (){
         ms.stopTimer();
 
         setTimeout(function () {
-            showGameEndScreen("You Won", "click here to submit your score");
+            showGameEndScreen("You Won", "click to submit your score");
         }, 800);
     };
 
@@ -198,10 +198,6 @@ var ms = new function (){
     // Building event handling utilities
     EventHandlerUtils = (function () {
 
-        function addToScoreBoard() {
-            ResultsManager.saveUser();
-        }
-
         function openCell(e) {
             if (ms.isGameOver) {
                 // click to restart the game
@@ -211,8 +207,8 @@ var ms = new function (){
             }
 
             if (ms.isGameWon) {
-                // click to enter your game to scoreboard
-                addToScoreBoard();
+                // click to enter the submit score screen
+                ResultsManager.toSubmitScoreMenu();
 
                 return;
             }

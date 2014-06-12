@@ -3,11 +3,17 @@
 var ResultsManager = (function () {
     localStorage.clear();
 
-    function saveUserToLocalStorage() {
-        var userName = prompt('Enter your name: ');
-        var userPlaytimeInSeconds = $('#timerValue').html();
+    function toSubmitScoreMenu() {
+        $("#game").fadeOut("slow", function () {
+            $("#submitScore").fadeIn();
+        });
+    }
 
-        if (userName) {
+    function saveUserToLocalStorage() {
+        var userName = $('#player-name').val(),
+            userPlaytimeInSeconds = $('#timerValue').text();
+
+        if (userName && userName !== '') {
             localStorage[userName] = userPlaytimeInSeconds;
         }
 
@@ -56,6 +62,7 @@ var ResultsManager = (function () {
     }
 
     return {
+        toSubmitScoreMenu: toSubmitScoreMenu,
         saveUser: saveUserToLocalStorage,
         updateScoreboard: updateUserScoreboard
     }

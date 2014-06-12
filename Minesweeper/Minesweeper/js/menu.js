@@ -18,7 +18,8 @@
         $scoreboard = $("#scoreboard").hide(),
         $audio = $("#audio"),
         $audioBtn = $("#audioBtn"),
-        audioPaused = false;
+        audioPaused = false,
+        $submitScore = $("#submitScore").hide();
 
     $("#startBtn").on('click', function () {
         fadeOutFadeIn($menu, $game);
@@ -106,6 +107,16 @@
         } else {
             pauseAudio();
         }
+    });
+
+    $("#submitBtn").on('click', function () {
+        ResultsManager.saveUser();
+        ResultsManager.updateScoreboard();
+        fadeOutFadeIn($submitScore, $scoreboard);
+    });
+
+    $("#cancelSubmitBtn").on('click', function () {
+       fadeOutFadeIn($submitScore, $menu);
     });
 
     // Help functions

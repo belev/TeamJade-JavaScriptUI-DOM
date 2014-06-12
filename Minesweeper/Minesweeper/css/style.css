@@ -54,6 +54,7 @@ table {
 
 body {
     font-family: 'Bangers', "Helvetica Neue", Arial, Helvetica, sans-serif, cursive;
+    font-size: 20px;
     background-color: #ededed;
 }
 
@@ -112,6 +113,16 @@ div {
 input[type="number"] {
     border: 2px solid black;
 }
+input[type="text"] {
+    font-family: 'Bangers', "Helvetica Neue", Arial, Helvetica, sans-serif, cursive;
+    font-size: 20px;
+    text-align: center;
+    height: 25px;
+    width: 250px;
+    padding: 2px 5px;
+    margin: 5px auto;
+    border: 3px solid black;
+}
 
 #timer {
     width: 150px;
@@ -157,6 +168,10 @@ input[type="number"] {
     position: relative;
     top: -90px;
     left: -185px;
+}
+
+#submitScore {
+    text-align: center;
 }
 
 #results-list {

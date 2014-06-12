@@ -6,7 +6,9 @@ var Game = new function () {
         this.height= this.canvas[0].height;
 
         this.ctx = this.canvas[0].getContext && this.canvas[0].getContext('2d');
-        if (!this.ctx) { return alert("Please upgrade your browser to play"); }
+        if (!this.ctx) {
+            return alert("Please upgrade your browser to play");
+        }
 
         SpriteSheet.load(sprite_data, callback);
     };
