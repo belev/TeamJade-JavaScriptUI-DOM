@@ -4,8 +4,11 @@ var ResultsManager = (function () {
     localStorage.clear();
 
     function toSubmitScoreMenu() {
+        $("#player-name").val('');
+
         $("#game").fadeOut("slow", function () {
             $("#submitScore").fadeIn();
+            $("#player-name").focus();
         });
     }
 
