@@ -245,6 +245,10 @@ var ms = new function (){
                     clickCell(rowPos, colPos, true);
                 }
 
+                if (ms.unrevealedCount === ms.settings.mines) {
+                    ms.isGameWon = true;
+                }
+
                 drawPlayfield();
             }
         }
@@ -272,14 +276,9 @@ var ms = new function (){
                     if (playfield[rowPos][colPos].isFlagged) {
                         unflagCell(rowPos, colPos);
 
-                    } else if (!playfield[rowPos][colPos].isFlagged &&
-                        ms.flagsLeft > 0) {
+                    } else if (!playfield[rowPos][colPos].isFlagged && ms.flagsLeft > 0) {
                         flagCell(rowPos, colPos);
                     }
-                }
-
-                if (ms.unrevealedCount === ms.settings.mines && ms.flagsLeft === 0) {
-                    ms.isGameWon = true;
                 }
 
                 drawPlayfield();
@@ -305,7 +304,9 @@ var ms = new function (){
             currentPosition.y += movementVector.y;
             movementVector.y++;
 
-            requestAnimationFrame(function () { animateCellOpening(movementVector, currentPosition) });
+            requestAnimationFrame(function () {
+                animateCellOpening(movementVector, currentPosition);
+            });
         }
 
         // if clicked on empty cell traverse all neighbour empty cells and open them
