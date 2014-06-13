@@ -141,8 +141,6 @@ var ms = new function () {
         var step = 20,
             steps = 50;
 
-        // unbind the canvas so the user can't click while the animation is running
-        Game.canvas.off("click");
         Game.canvas[0].width = 300;
         Game.ctx.fillStyle = "black";
         Game.ctx.textAlign = "center";
