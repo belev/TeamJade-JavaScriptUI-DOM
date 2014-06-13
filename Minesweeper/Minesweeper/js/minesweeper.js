@@ -67,7 +67,7 @@ var ms = new function () {
         ms.stopTimer();
 
         setTimeout(function () {
-            showGameEndScreen("You Lost", "click to try again");
+            showGameEndScreen("You Lost", "click here to try again");
         }, 800);
     };
 
@@ -75,7 +75,7 @@ var ms = new function () {
         ms.stopTimer();
 
         setTimeout(function () {
-            showGameEndScreen("You Won", "click to submit your score");
+            showGameEndScreen("You Won", "click here to submit your score");
         }, 800);
     };
 
@@ -134,8 +134,9 @@ var ms = new function () {
     }
 
     function showGameEndScreen(title, description) {
-        var endScreenAnimationStep = 0, steps = 30;
+        var endScreenAnimationStep = 0, steps = 50;
 
+        Game.canvas[0].width = 300;
         Game.ctx.fillStyle = "black";
         Game.ctx.textAlign = "center";
         Game.ctx.textBaseline = "middle";
@@ -151,7 +152,7 @@ var ms = new function () {
             Game.ctx.translate(Game.canvas[0].width / 2, Game.canvas[0].height / 2);
             Game.ctx.font = "bold " + endScreenAnimationStep + "px bangers";
             Game.ctx.fillText(title, 0, 0);
-            Game.ctx.font = "bold " + endScreenAnimationStep / 2 + "px bangers";
+            Game.ctx.font = endScreenAnimationStep / 2 + "px bangers";
             Game.ctx.fillText(description, 0, 30);
             Game.ctx.restore();
 

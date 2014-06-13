@@ -16,9 +16,11 @@ var ResultsManager = (function () {
         var userName = $('#player-name').val(),
             userPlaytimeInSeconds = $('#timerValue').text();
 
-        if (userName && userName !== '') {
-            localStorage[userName] = userPlaytimeInSeconds;
+        if (userName === '') {
+            userName = 'unknown';
         }
+
+        localStorage[userName] = userPlaytimeInSeconds;
 
         ms.startGame();
     }
@@ -39,8 +41,6 @@ var ResultsManager = (function () {
             return a.score - b.score;
         });
 
-        console.log(userData);
-
         return userData;
     }
 
@@ -48,6 +48,10 @@ var ResultsManager = (function () {
         var $scoreboard = $('#scoreboard'),
             playersResults = getSortedResults(),
             playersToDisplayCount = Math.min(5, playersResults.length);
+
+        if (playersToDisplayCount === 0) {
+            return;
+        }
 
         var resultsList = $('<ul />').attr('id', 'results-list');
 
