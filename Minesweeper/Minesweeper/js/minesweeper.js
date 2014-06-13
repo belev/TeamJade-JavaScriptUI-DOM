@@ -127,12 +127,8 @@ var ms = new function () {
         }
 
         if (ms.isGameOver) {
-            // unbind click events so that if the user click a lot of times nothing will happen until the game over screen appears
-            Game.canvas.off("click");
             ms.gameOver();
         } else if (ms.isGameWon) {
-            // unbind click events so that if the user click a lot of times nothing will happen until the game won screen appears
-            Game.canvas.off("click");
             ms.gameWon();
         }
     }
@@ -241,6 +237,8 @@ var ms = new function () {
 
                 if (!playField[rowPos][colPos].isFlagged &&
                     playField[rowPos][colPos].hasMine) {
+                    // unbind click events so that if the user click a lot of times nothing will happen until the game over screen appears
+                    Game.canvas.off("click");
                     ms.isGameOver = true;
                 } else if (!playField[rowPos][colPos].isFlagged) {
                     // click on the cell, if the cell is empty, open all the empty cells around it
@@ -248,6 +246,8 @@ var ms = new function () {
                 }
 
                 if (ms.unrevealedCount === ms.settings.mines) {
+                    // unbind click events so that if the user click a lot of times nothing will happen until the game won screen appears
+                    Game.canvas.off("click");
                     ms.isGameWon = true;
                 }
 
