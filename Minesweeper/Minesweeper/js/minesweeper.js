@@ -44,7 +44,7 @@ var ms = new function () {
             $mines = parseInt($("#mines").val()) || 10;
 
         $timer = $("#timerValue").text("0");
-        PlayfieldManager.isFirstClicked = false;
+        PlayFieldManager.isFirstClicked = false;
         ms.isGameOver = false;
         ms.isGameWon = false;
         ms.settings.rows = setRowColInput($rows);
@@ -56,7 +56,7 @@ var ms = new function () {
         Game.canvas[0].width = ms.settings.cols * ms.sprites.cell.w;
         Game.canvas[0].height = ms.settings.rows * ms.sprites.cell.h;
 
-        playField = PlayfieldManager.initializeEmpty(ms.settings.rows, ms.settings.cols);
+        playField = PlayFieldManager.initializeEmpty(ms.settings.rows, ms.settings.cols);
 
         eventHandlerSetup();
 
@@ -227,12 +227,12 @@ var ms = new function () {
 
             if (isValidCell(rowPos, colPos)) {
 
-                if (!PlayfieldManager.isFirstClicked) {
-                    playField = PlayfieldManager.initialize(ms.settings.rows,
+                if (!PlayFieldManager.isFirstClicked) {
+                    playField = PlayFieldManager.initialize(ms.settings.rows,
                         ms.settings.cols,
                         ms.settings.mines,
                         rowPos, colPos);
-                    PlayfieldManager.isFirstClicked = true;
+                    PlayFieldManager.isFirstClicked = true;
                 }
 
                 if (!playField[rowPos][colPos].isFlagged &&
