@@ -132,7 +132,7 @@ input[type="text"] {
 #timerValue {
     background-color: #f7f7f7;
     display: inline-block;
-    min-width: 40px;
+    min-width: 50px;
     border: 2px solid black;
     padding: 2px;
 }
