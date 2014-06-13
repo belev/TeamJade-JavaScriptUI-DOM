@@ -1,6 +1,11 @@
 ﻿/*==================== Fonts =====================*/
 
-@import url(http://fonts.googleapis.com/css?family=Bangers);
+@font-face {
+    font-family: 'Bangers';
+    font-style: normal;
+    font-weight: 400;
+    src: local('Bangers'), local('Bangers-Regular'), url(../fonts/bangers.woff) format('woff');
+}
 
 
 /*==================== Reset ====================*/
