@@ -26,10 +26,11 @@ var ResultsManager = (function () {
     }
 
     function getSortedResults() {
-        var userData = [];
+        var userData = [],
+            currentUserKey;
 
         for (var i = 0, len = localStorage.length; i < len; i += 1) {
-            var currentUserKey = localStorage.key(i);
+            currentUserKey = localStorage.key(i);
 
             userData.push({
                 name: currentUserKey,
@@ -47,18 +48,15 @@ var ResultsManager = (function () {
     function updateUserScoreboard() {
         var $scoreboard = $('#scoreboard'),
             playersResults = getSortedResults(),
-            playersToDisplayCount = Math.min(5, playersResults.length);
+            playersToDisplayCount = Math.min(5, playersResults.length),
+            resultsList = $('<ul />').attr('id', 'results-list'),
+            currentPlayerData = $('<li />');
 
         if (playersToDisplayCount === 0) {
             return;
         }
 
-        var resultsList = $('<ul />').attr('id', 'results-list');
-
-        var currentPlayerData = $('<li />');
-
         for (var i = 0; i < playersToDisplayCount; i += 1) {
-
             currentPlayerData.html(playersResults[i].name + ': ' + playersResults[i].score + 's.');
 
             resultsList.append(currentPlayerData.clone(true));

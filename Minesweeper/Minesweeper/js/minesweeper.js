@@ -294,7 +294,7 @@ var ms = new function () {
 
             currentPosition.x += movementVector.x;
             currentPosition.y += movementVector.y;
-            movementVector.y++;
+            movementVector.y += 1;
 
             requestAnimationFrame(function () {
                 animateCellOpening(movementVector, currentPosition);
@@ -329,8 +329,8 @@ var ms = new function () {
             }
 
             if (playField[row][col].neighbourMinesCount === 0) {
-                for (var neighbourRow = row - 1; neighbourRow <= row + 1; neighbourRow++) {
-                    for (var neighbourCol = col - 1; neighbourCol <= col + 1; neighbourCol++) {
+                for (var neighbourRow = row - 1; neighbourRow <= row + 1; neighbourRow += 1) {
+                    for (var neighbourCol = col - 1; neighbourCol <= col + 1; neighbourCol += 1) {
                         if (row != neighbourRow || col != neighbourCol) {
                             clickCell(neighbourRow, neighbourCol, false);
                         }
