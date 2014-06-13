@@ -130,6 +130,7 @@ var ms = new function () {
             Game.canvas.off("click");
             ms.gameOver();
         } else if (ms.isGameWon) {
+            Game.canvas.off("click");
             ms.gameWon();
         }
     }
