@@ -134,8 +134,10 @@ var ms = new function () {
     }
 
     function showGameEndScreen(title, description) {
-        var endScreenAnimationStep = 0, steps = 50;
+        var step = 20,
+            steps = 50;
 
+        Game.canvas.off("click"); // unbind the canvas so the user can't click while the animation is running
         Game.canvas[0].width = 300;
         Game.ctx.fillStyle = "black";
         Game.ctx.textAlign = "center";
@@ -144,20 +146,22 @@ var ms = new function () {
         smallTextToBigText();
 
         function smallTextToBigText() {
+            step += 1;
+
             Game.ctx.clearRect(0, 0, Game.canvas[0].width, Game.canvas[0].height);
-
-            endScreenAnimationStep += 1;
-
             Game.ctx.save();
             Game.ctx.translate(Game.canvas[0].width / 2, Game.canvas[0].height / 2);
-            Game.ctx.font = "bold " + endScreenAnimationStep + "px bangers";
+            Game.ctx.font = "bold " + step + "px bangers";
             Game.ctx.fillText(title, 0, 0);
-            Game.ctx.font = endScreenAnimationStep / 2 + "px bangers";
+            Game.ctx.font = step / 2 + "px bangers";
             Game.ctx.fillText(description, 0, 30);
             Game.ctx.restore();
 
-            if (endScreenAnimationStep < steps) {
+            if (step < steps) {
                 requestAnimationFrame(smallTextToBigText, null);
+            } else {
+                // bind the canvas to click event again
+                Game.canvas.on("click", EventHandlerUtils.openCell);
             }
         }
     }
