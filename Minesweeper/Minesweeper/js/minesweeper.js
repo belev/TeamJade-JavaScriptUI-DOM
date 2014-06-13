@@ -1,4 +1,4 @@
-var ms = new function (){
+var ms = new function () {
 
     var playField = [],
         EventHandlerUtils = {},
@@ -115,7 +115,7 @@ var ms = new function (){
                 }
 
                 if (playField[i][j].isRevealed &&
-                        playField[i][j].neighbourMinesCount !== 0) {
+                    playField[i][j].neighbourMinesCount !== 0) {
                     // draw number of neighbour mines
                     SpriteSheet.draw(Game.ctx,
                         playField[i][j].neighbourMinesCount,
@@ -221,8 +221,7 @@ var ms = new function (){
                 colPos = Math.floor(x / ms.sprites.cell.w),
                 rowPos = Math.floor(y / ms.sprites.cell.h);
 
-            if (colPos >= 0 && colPos < ms.settings.cols &&
-                rowPos >= 0 && rowPos < ms.settings.rows) {
+            if (isValidCell(rowPos, colPos)) {
 
                 if (!PlayfieldManager.isFirstClicked) {
                     playField = PlayfieldManager.initialize(ms.settings.rows,
@@ -261,8 +260,7 @@ var ms = new function (){
                 colPos = Math.floor(x / ms.sprites.cell.w),
                 rowPos = Math.floor(y / ms.sprites.cell.h);
 
-            if (colPos >= 0 && colPos < ms.settings.cols &&
-                rowPos >= 0 && rowPos < ms.settings.rows) {
+            if (isValidCell(rowPos, colPos)) {
 
                 colPos = Math.floor(x / ms.sprites.cell.w);
                 rowPos = Math.floor(y / ms.sprites.cell.h);
@@ -283,7 +281,7 @@ var ms = new function (){
         function animateCellOpening(movementVector, currentPosition) {
             // working with canvas coordinates:
 
-            if (currentPosition.y > Game.canvas[0].height+ms.sprites.cell.h) {
+            if (currentPosition.y > Game.canvas[0].height + ms.sprites.cell.h) {
                 return;
             }
 
@@ -306,8 +304,7 @@ var ms = new function (){
         // if clicked on full cell open only the clicked cell
         function clickCell(row, col, isAnimated) {
             // check if the cell we want to reveal is in the playfield
-            if (col < 0 || row < 0 ||
-                col >= ms.settings.cols || row >= ms.settings.rows) {
+            if (!isValidCell(row, col)) {
                 return;
             }
 
@@ -360,6 +357,10 @@ var ms = new function (){
         function unflagCell(row, col) {
             playField[row][col].isFlagged = false;
             ms.flagsLeft += 1;
+        }
+
+        function isValidCell(row, col) {
+            return (col >= 0 && row >= 0 && col < ms.settings.cols && row < ms.settings.rows);
         }
 
         return {
