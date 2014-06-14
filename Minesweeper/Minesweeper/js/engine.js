@@ -49,7 +49,9 @@ Sprite.prototype.setup = function (sprite, props) {
 Sprite.prototype.merge = function (props) {
     if (props) {
         for (var prop in props) {
-            this[prop] = props[prop];
+            if (props.hasOwnProperty(prop)) {
+                this[prop] = props[prop];
+            }
         }
     }
 };
