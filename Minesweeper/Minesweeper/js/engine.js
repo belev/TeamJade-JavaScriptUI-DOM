@@ -1,9 +1,9 @@
 var Game = new function () {
 
     this.initialize = function (canvasElementId, sprite_data, callback) {
-        this.canvas = $('#'+canvasElementId);
+        this.canvas = $('#' + canvasElementId);
         this.width = this.canvas[0].width;
-        this.height= this.canvas[0].height;
+        this.height = this.canvas[0].height;
 
         this.ctx = this.canvas[0].getContext && this.canvas[0].getContext('2d');
         if (!this.ctx) {
@@ -28,22 +28,23 @@ var SpriteSheet = new function () {
         var sprite = this.map[spriteName];
         if (!frame) frame = 0;
         ctx.drawImage(this.image,
-                        sprite.sx + frame * sprite.w,
-                        sprite.sy,
-                        sprite.w, sprite.h,
-                        Math.floor(x), Math.floor(y),
-                        sprite.w, sprite.h);
+                sprite.sx + frame * sprite.w,
+            sprite.sy,
+            sprite.w, sprite.h,
+            Math.floor(x), Math.floor(y),
+            sprite.w, sprite.h);
     };
 };
 
-var Sprite = function () { };
+var Sprite = function () {
+};
 
 Sprite.prototype.setup = function (sprite, props) {
     this.sprite = sprite;
     this.merge(props);
     this.frame = this.frame || 0;
-    this.w =  SpriteSheet.map[sprite].w;
-    this.h =  SpriteSheet.map[sprite].h;
+    this.w = SpriteSheet.map[sprite].w;
+    this.h = SpriteSheet.map[sprite].h;
 };
 
 Sprite.prototype.merge = function (props) {
@@ -56,6 +57,6 @@ Sprite.prototype.merge = function (props) {
     }
 };
 
-Sprite.prototype.draw = function(ctx) {
+Sprite.prototype.draw = function (ctx) {
     SpriteSheet.draw(ctx, this.sprite, this.x, this.y, this.frame);
 };
