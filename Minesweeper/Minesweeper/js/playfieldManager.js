@@ -1,4 +1,4 @@
-var PlayFieldManager = (function () {
+var PlayfieldManager = (function () {
     var Cell = function (x, y) {
         this.setup('cell', {
             x: x,
@@ -12,29 +12,29 @@ var PlayFieldManager = (function () {
 
     Cell.prototype = new Sprite();
 
-    function initializeEmptyPlayField(playFieldRows, playFieldCols) {
-        var playField = [],
+    function initializeEmptyPlayfield(width, height) {
+        var cellMatrix = [],
             newCell;
 
-        for (var row = 0; row < playFieldRows; row += 1) {
-            playField[row] = [];
+        for (var i = 0; i < width; i += 1) {
+            cellMatrix[i] = [];
 
-            for (var col = 0; col < playFieldCols; col += 1) {
-                newCell = new Cell(col * ms.sprites.cell.w, row * ms.sprites.cell.h);
-                playField[row][col] = newCell;
+            for (var j = 0; j < height; j += 1) {
+                newCell = new Cell(j * ms.sprites.cell.w, i * ms.sprites.cell.h);
+                cellMatrix[i][j] = newCell;
             }
         }
 
-        return playField;
+        return cellMatrix;
     }
 
-    function getPossibleMinesPositions(playFieldRows, playFieldCols, firstClickedRow, firstClickedCol) {
+    function getPossibleMinesPositions(playfieldWidth, playfieldHeight, firstClickedCellX, firstClickedCellY) {
         var possibleMinesCoordinates = [];
 
-        for (var row = 0; row < playFieldRows; row += 1) {
-            for (var col = 0; col < playFieldCols; col += 1) {
-                if (row != firstClickedRow || col != firstClickedCol) {
-                    possibleMinesCoordinates.push(new Position(row, col));
+        for (var i = 0; i < playfieldWidth; i += 1) {
+            for (var j = 0; j < playfieldHeight; j += 1) {
+                if (i != firstClickedCellX || j != firstClickedCellY) {
+                    possibleMinesCoordinates.push(new Position(i, j));
                 }
             }
         }
@@ -42,36 +42,36 @@ var PlayFieldManager = (function () {
         return possibleMinesCoordinates;
     }
 
-    function neighbourMinesCountIncreaseForAllNeighbours(playField, currentRow, currentCol, playFieldRows, playFieldCols) {
-        for (var neighbourRow = currentRow - 1; neighbourRow <= currentRow + 1; neighbourRow += 1) {
-            for (var neighbourCol = currentCol - 1; neighbourCol <= currentCol + 1; neighbourCol += 1) {
+    function neighbourMinesCountIncreaseForAllNeighbours(cellMatrix, x, y) {
+        for (var neighbourX = x - 1; neighbourX <= x + 1; neighbourX += 1) {
+            for (var neighbourY = y - 1; neighbourY <= y + 1; neighbourY += 1) {
                 //neighbour must exist i.e. it must be a valid cell in order to increase it's counter
-                if (neighbourRow >= 0 && neighbourCol >= 0 &&
-                    neighbourRow < playFieldRows && neighbourCol < playFieldCols) {
-                    if (currentRow != neighbourRow || currentCol != neighbourCol) {
-                        playField[neighbourRow][neighbourCol].neighbourMinesCount += 1;
+                if (neighbourX >= 0 && neighbourY >= 0 &&
+                    neighbourX < ms.settings.cols && neighbourY < ms.settings.rows) {
+                    if (x != neighbourX || y != neighbourY) {
+                        cellMatrix[neighbourX][neighbourY].neighbourMinesCount += 1;
                     }
                 }
             }
         }
     }
 
-    function initializePlayField(playFieldRows, playFieldCols, numberOfMines, selectedRow, selectedCol) {
-        var playField = initializeEmptyPlayField(playFieldRows, playFieldCols),
-            possibleMinesCoordinatesMatrix = getPossibleMinesPositions(playFieldRows, playFieldCols, selectedRow, selectedCol),
+    function initializePlayfield(playfieldWidth, playfieldHeight, numberOfMines, selectedX, selectedY) {
+        var playfield = initializeEmptyPlayfield(playfieldWidth, playfieldHeight),
+            possibleMinesCoordinatesMatrix = getPossibleMinesPositions(playfieldWidth, playfieldHeight, selectedX, selectedY),
             mineIndex,
-            currentMineCol,
-            currentMineRow;
+            currentMineX,
+            currentMineY;
 
         // place all mines on the playfield
         for (var i = 0; i < numberOfMines; i += 1) {
             mineIndex = getRandomInt(0, possibleMinesCoordinatesMatrix.length - 1);
-            currentMineRow = possibleMinesCoordinatesMatrix[mineIndex].row;
-            currentMineCol = possibleMinesCoordinatesMatrix[mineIndex].col;
+            currentMineX = possibleMinesCoordinatesMatrix[mineIndex].x;
+            currentMineY = possibleMinesCoordinatesMatrix[mineIndex].y;
 
-            playField[currentMineRow][currentMineCol].hasMine = true;
+            playfield[currentMineX][currentMineY].hasMine = true;
 
-            neighbourMinesCountIncreaseForAllNeighbours(playField, currentMineRow, currentMineCol, playFieldRows, playFieldCols);
+            neighbourMinesCountIncreaseForAllNeighbours(playfield, currentMineX, currentMineY, playfieldWidth, playfieldHeight);
 
             // remove the used coordinates for mine
             // so that there has not two mines on one cell
@@ -80,23 +80,23 @@ var PlayFieldManager = (function () {
 
         ms.startTimer();
 
-        return playField;
+        return playfield;
     }
 
     function getRandomInt(min, max) {
         return Math.floor(Math.random() * (max - min + 1)) + min;
     }
 
-    function Position(row, col) {
+    function Position(x, y) {
         return {
-            col: col,
-            row: row
+            x: x,
+            y: y
         }
     }
 
     return {
-        initialize: initializePlayField,
-        initializeEmpty: initializeEmptyPlayField,
+        initialize: initializePlayfield,
+        initializeEmpty: initializeEmptyPlayfield,
         isFirstClicked: false
     }
 }());
