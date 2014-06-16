@@ -1,3 +1,5 @@
+[GAME DEMO!](http://minesweeper.artviz.eu/)
+
 Teamwork project for the course JavaScript UI&DOM
 
 This document describes the teamwork assignment for Telerik Academy students in JavaScript 
@@ -32,4 +34,4 @@ Optional Requirements
 If you have a chance, time and a suitable situation, you might add some of the following to 
 your project: 
 - Use DOM manipulations like native DOM API or jQuery 
-- Unit and integration testing 
+- Unit and integration testing
