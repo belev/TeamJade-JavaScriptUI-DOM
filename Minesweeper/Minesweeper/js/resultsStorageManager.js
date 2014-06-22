@@ -1,7 +1,4 @@
-// div#scoreboard
-
 var ResultsManager = (function () {
-    localStorage.clear();
 
     function toSubmitScoreMenu() {
         $("#player-name").val('');

@@ -1,5 +1,9 @@
 var ms = new function () {
 
+	var DEFAULT_ROWS_COUNT = 8,
+		DEFAULT_COLS_COUNT = 8,
+		DEFAULT_MINES_COUNT = 10;
+
     var playField = [],
         EventHandlerUtils = {},
         $timer = $("#timerValue");
@@ -39,9 +43,9 @@ var ms = new function () {
 
     this.startGame = function () {
         // reset all
-        var $rows = parseInt($("#rows").val()) || 8,
-            $cols = parseInt($("#cols").val()) || 8,
-            $mines = parseInt($("#mines").val()) || 10;
+        var $rows = parseInt($("#rows").val()) || DEFAULT_ROWS_COUNT,
+            $cols = parseInt($("#cols").val()) || DEFAULT_COLS_COUNT,
+            $mines = parseInt($("#mines").val()) || DEFAULT_MINES_COUNT;
 
         $timer = $("#timerValue").text("0");
         PlayfieldManager.isFirstClicked = false;
