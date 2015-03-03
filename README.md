@@ -1,4 +1,4 @@
-[GAME DEMO!](http://minesweeper.artviz.eu/)
+[GAME DEMO!](https://cdn.rawgit.com/Belev/TeamJade-JavaScriptUI-DOM/master/Minesweeper/Minesweeper/index.html)
 
 Teamwork project for the course JavaScript UI&DOM
 
